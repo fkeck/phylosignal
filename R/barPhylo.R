@@ -105,7 +105,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     trait <- names(tdata(p4d))[trait]
   }
 ####
-  tree.type <- match.arg(tree.type, c("phylogram", "cladogram"))
+  tree.type <- match.arg(tree.type, c("phylogram", "cladogram", "fan"))
   plot.type <- match.arg(plot.type, c("barplot", "dotplot", "gridplot"))
   
   if(!is.null(error.bar.inf)){
@@ -228,158 +228,224 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   trait.font <- rep(trait.font, length.out = n.traits)
   trait.bg.col <- rep(trait.bg.col, length.out = n.traits)
   
-  ###
-  
-  if(plot.type %in% c("barplot", "dotplot")){
-    lay <- layouterize(n.traits = n.traits, show.tip = show.tip)
-    lay.w <- layouterizeRatio(tree.ratio = tree.ratio, n.traits = n.traits, show.tip = show.tip)
-  }
-  if(plot.type == "gridplot"){
-    lay <- layouterize(n.traits = 1, show.tip = show.tip)
-    lay.w <- layouterizeRatio(tree.ratio = tree.ratio, n.traits = 1, show.tip = show.tip)
-  }
-  
-
   if(is.null(tree.xlim)){
-   tree.xlim <- plotPhyloDisabled(phy, type = tree.type,
-                                  show.tip.label = FALSE,
-                                  x.lim = NULL, y.lim = NULL,
-                                  no.margin = FALSE, direction = "rightwards",
-                                  plot = FALSE, ...)$x.lim
+    tree.xlim <- plotPhyloDisabled(phy, type = tree.type,
+                                   show.tip.label = FALSE,
+                                   x.lim = NULL, y.lim = NULL,
+                                   no.margin = FALSE, direction = "rightwards",
+                                   plot = FALSE, ...)$x.lim
   }
   
-  layout(lay, widths = lay.w)
-  par(xpd = FALSE)
-  par.mar0 <- par("mar")
-  par(mar=c(5, 1, 4, 0), lend = 1)
-  fig.traits <- vector("list", n.traits)
-  names(fig.traits) <- trait
-  
-  if(plot.type %in% c("barplot", "dotplot")){
-    for(i in 1:n.traits){
+  ###
+  if(tree.type == "phylogram" | tree.type == "cladogram"){
+    
+    if(plot.type %in% c("barplot", "dotplot")){
+      lay <- layouterize(n.traits = n.traits, show.tip = show.tip)
+      lay.w <- layouterizeRatio(tree.ratio = tree.ratio, n.traits = n.traits, show.tip = show.tip)
+    }
+    if(plot.type == "gridplot"){
+      lay <- layouterize(n.traits = 1, show.tip = show.tip)
+      lay.w <- layouterizeRatio(tree.ratio = tree.ratio, n.traits = 1, show.tip = show.tip)
+    }
+    
+    layout(lay, widths = lay.w)
+    par(xpd = FALSE)
+    par.mar0 <- par("mar")
+    par(mar=c(5, 1, 4, 0), lend = 1)
+    fig.traits <- vector("list", n.traits)
+    names(fig.traits) <- trait
+    
+    if(plot.type %in% c("barplot", "dotplot")){
+      for(i in 1:n.traits){
+        plot.new()
+        plot.window(xlim = bar.xlim[, i], ylim = ylim)
+        fig.traits[[i]] <- par("fig")
+        rect(par("usr")[1], par("usr")[3]-(3 * par("cxy")[2]), par("usr")[2], par("usr")[4],
+             col = trait.bg.col[i], border = NA, xpd = TRUE)
+        if(show.box){
+          box()
+        }
+        if(grid.vertical){        
+          grid(NULL, NA, col = grid.col, lty = grid.lty)
+          abline(v = 0, lty = "solid", col = grid.col)
+        } else {
+          abline(v = 0, lty = "solid", col = grid.col)
+        }
+        if(grid.horizontal){
+          abline(h= 1:n.tips, col = grid.col, lty = grid.lty)
+        }
+        if(plot.type == "barplot"){
+          segments(x0 = 0, x1 = X[, i], y0 = 1:n.tips, lwd = bar.lwd, col = bar.col[, i])
+        }
+        if(plot.type == "dotplot"){
+          points(x = X[, i], y = 1:n.tips, col = dot.col[, i], pch= dot.pch[, i], cex = dot.cex[, i])
+        }
+        options(warn = -1)
+        if(!is.null(error.bar.inf)){
+          arrows(x0 = X[, i], x1 = arrow.inf[, i], y0 = 1:n.tips,
+                 lwd = 1, col = error.bar.col, angle = 90, length = 0.04)
+        }
+        if(!is.null(error.bar.sup)){
+            arrows(x0 = X[, i], x1 = arrow.sup[, i], y0 = 1:n.tips,
+                 lwd = 1, col = error.bar.col, angle = 90, length = 0.04)
+        }
+        options(warn = 1)
+        if(show.bar.axis){
+          axis(1)
+        }
+        if(show.trait){
+          mtext(trait.labels[i], side = 1, line = 3, las = par("las"),
+                col = trait.col[i], cex = trait.cex[i],
+                font = trait.font[i])
+        }
+      }
+    }
+    if(plot.type == "gridplot"){
       plot.new()
-      plot.window(xlim = bar.xlim[, i], ylim = ylim)
-      fig.traits[[i]] <- par("fig")
-      rect(par("usr")[1], par("usr")[3]-(3 * par("cxy")[2]), par("usr")[2], par("usr")[4],
-           col = trait.bg.col[i], border = NA, xpd = TRUE)
+      rect(par("usr")[1], par("usr")[3] - (3 * par("cxy")[2]), par("usr")[2], par("usr")[4],
+           col = trait.bg.col[1], border = NA, xpd = TRUE)
+      bar.xlim[1, ] <- 0
+      bar.xlim[2, ] <- n.traits
+      plot.window(xlim = bar.xlim[, 1], ylim = ylim)
+      fig.traits[[1]] <- par("fig")
+      image(x = 0:n.traits, y = 1:n.tips, z = t(X),
+            col = cell.col, add = TRUE,
+            xlab = "", ylab = "", yaxs = FALSE, xaxs = FALSE)
+      
       if(show.box){
         box()
       }
-      if(grid.vertical){        
-        grid(NULL, NA, col = grid.col, lty = grid.lty)
-        abline(v = 0, lty = "solid", col = grid.col)
-      } else {
-        abline(v = 0, lty = "solid", col = grid.col)
+      
+      if(grid.horizontal){        
+        abline(h = seq(1.5, n.tips - 0.5), col = grid.col, lty = grid.lty)
       }
-      if(grid.horizontal){
-        abline(h= 1:n.tips, col = grid.col, lty = grid.lty)
+      if(grid.vertical){
+        abline(v = seq(1, n.traits - 1), col = grid.col, lty = grid.lty)
       }
-      if(plot.type == "barplot"){
-        segments(x0 = 0, x1 = X[, i], y0 = 1:n.tips, lwd = bar.lwd, col = bar.col[, i])
-      }
-      if(plot.type == "dotplot"){
-        points(x = X[, i], y = 1:n.tips, col = dot.col[, i], pch= dot.pch[, i], cex = dot.cex[, i])
-      }
-      options(warn = -1)
-      if(!is.null(error.bar.inf)){
-        arrows(x0 = X[, i], x1 = arrow.inf[, i], y0 = 1:n.tips,
-               lwd = 1, col = error.bar.col, angle = 90, length = 0.04)
-      }
-      if(!is.null(error.bar.sup)){
-          arrows(x0 = X[, i], x1 = arrow.sup[, i], y0 = 1:n.tips,
-               lwd = 1, col = error.bar.col, angle = 90, length = 0.04)
-      }
-      options(warn = 1)
-      if(show.bar.axis){
-        axis(1)
-      }
+  
       if(show.trait){
-        mtext(trait.labels[i], side = 1, line = 3, las = par("las"),
-              col = trait.col[i], cex = trait.cex[i],
-              font = trait.font[i])
+        mtext(trait.labels, at = seq(0.5, (n.traits - 0.5)),
+              side = 1, line = 1, las = par("las"),
+              col = trait.col, cex = trait.cex,
+              font = trait.font)    
       }
     }
-  }
-  if(plot.type == "gridplot"){
-    plot.new()
-    rect(par("usr")[1], par("usr")[3] - (3 * par("cxy")[2]), par("usr")[2], par("usr")[4],
-         col = trait.bg.col[1], border = NA, xpd = TRUE)
-    bar.xlim[1, ] <- 0
-    bar.xlim[2, ] <- n.traits
-    plot.window(xlim = bar.xlim[, 1], ylim = ylim)
-    fig.traits[[1]] <- par("fig")
-    image(x = 0:n.traits, y = 1:n.tips, z = t(X),
-          col = cell.col, add = TRUE,
-          xlab = "", ylab = "", yaxs = FALSE, xaxs = FALSE)
     
-    if(show.box){
-      box()
+    if(show.tip){
+      plot.new()
+      tip.xlim <- c(-1, 1)
+      if(tip.adj < 0.5) tip.xlim[1] <- -tip.adj / 0.5
+      if(tip.adj > 0.5) tip.xlim[2] <- -2 * tip.adj + 2
+      plot.window(xlim = tip.xlim, ylim = ylim)
+      text(x = 0, y = 1:n.tips, labels = tip.labels,
+           adj = tip.adj, col = tip.col, cex = tip.cex, font = tip.font)
+      fig.tip <- par("fig")
+    } else {
+      fig.tip <- NULL
+      tip.xlim <- NULL
     }
     
-    if(grid.horizontal){        
-      abline(h = seq(1.5, n.tips - 0.5), col = grid.col, lty = grid.lty)
+    plot.phylo(phy, type = tree.type, show.tip.label = FALSE,
+               x.lim = tree.xlim, y.lim = NULL,
+               no.margin = FALSE, direction = "rightwards", ...)
+    fig.tree <- par("fig")
+    
+    if(plot.type == "gridplot" & show.color.scale){
+      par(new = TRUE)
+      plt.init <- par("plt")
+      par(plt = c(par("plt")[1] + 0.05, par("plt")[2] - 0.2, 0.07, 0.1))
+      plot.new()
+      breaks <- seq(min(X), max(X), length.out = (length(cell.col) + 1))
+      scale.xlim <- range(breaks)
+      scale.ylim <- c(0, 1)
+      plot.window(xlim = scale.xlim, ylim = scale.ylim)
+      for(i in 1:length(cell.col)){
+        polygon(c(breaks[i], breaks[i + 1], breaks[i + 1], breaks[i]), c(0, 0, 1, 1),
+                col = cell.col[i], border = NA)
+      }
+      axis(1)
+      par(plt = plt.init)
     }
-    if(grid.vertical){
-      abline(v = seq(1, n.traits - 1), col = grid.col, lty = grid.lty)
-    }
-
-    if(show.trait){
-      mtext(trait.labels, at = seq(0.5, (n.traits - 0.5)),
-            side = 1, line = 1, las = par("las"),
-            col = trait.col, cex = trait.cex,
-            font = trait.font)    
-    }
+    
+    assign("last_barplotp4d", list(plot.type = plot.type,
+                                   show.tip = show.tip,
+                                   layout = lay,
+                                   fig.tree = fig.tree,
+                                   fig.traits = fig.traits,
+                                   fig.tip = fig.tip,
+                                   tree.xlim = tree.xlim,
+                                   bar.xlim = bar.xlim,
+                                   tip.xlim = tip.xlim,
+                                   ylim = ylim, par.mar0 = par.mar0), 
+           envir = .PlotPhyloEnv)
+    layout(1)
   }
   
 
-  if(show.tip){
-    plot.new()
-    tip.xlim <- c(-1, 1)
-    if(tip.adj < 0.5) tip.xlim[1] <- -tip.adj / 0.5
-    if(tip.adj > 0.5) tip.xlim[2] <- -2 * tip.adj + 2
-    plot.window(xlim = tip.xlim, ylim = ylim)
-    text(x = 0, y = 1:n.tips, labels = tip.labels,
-         adj = tip.adj, col = tip.col, cex = tip.cex, font = tip.font)
-    fig.tip <- par("fig")
-  } else {
-    fig.tip <- NULL
-    tip.xlim <- NULL
-  }
-  
-  plot.phylo(phy, type = tree.type, show.tip.label = FALSE,
-             x.lim = tree.xlim, y.lim = NULL,
-             no.margin = FALSE, direction = "rightwards", ...)
-  fig.tree <- par("fig")
-  
-  if(plot.type == "gridplot" & show.color.scale){
-    par(new = TRUE)
-    plt.init <- par("plt")
-    par(plt = c(par("plt")[1] + 0.05, par("plt")[2] - 0.2, 0.07, 0.1))
-    plot.new()
-    breaks <- seq(min(X), max(X), length.out = (length(cell.col) + 1))
-    scale.xlim <- range(breaks)
-    scale.ylim <- c(0, 1)
-    plot.window(xlim = scale.xlim, ylim = scale.ylim)
-    for(i in 1:length(cell.col)){
-      polygon(c(breaks[i], breaks[i + 1], breaks[i + 1], breaks[i]), c(0, 0, 1, 1),
-              col = cell.col[i], border = NA)
+  if(tree.type == "fan"){
+    par.mar0 <- par("mar")
+    
+    if(is.null(tree.ratio)){
+      if(show.tip){
+        tree.ratio <- 1 / (n.traits + 2)
+      } else {
+        tree.ratio <- 1 / (n.traits + 1)
+      }
     }
-    axis(1)
-    par(plt = plt.init)
+    
+    plot.phylo(phy, type = tree.type, show.tip.label = FALSE,
+               x.lim = tree.xlim * (1/tree.ratio), y.lim = NULL,
+               no.margin = TRUE, ...)
+    lp <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+    
+    #lines(lp$xx[1:n.tips][new.order], lp$yy[1:n.tips][new.order])
+    
+    length.phylo <- sqrt(lp$xx[1]^2 + lp$yy[1])
+    length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / n.traits
+    length.intergr <- 0.2 * length.gr0
+    length.gr <- length.gr0 - length.intergr
+    
+    theta <- atan2(lp$xx[1:n.tips], lp$yy[1:n.tips])[new.order]
+    cos.t <- cos(pi/2 - theta)
+    sin.t <- sin(pi/2 - theta)
+    
+    theta.soft <- seq(0, 360) * pi/180
+    cos.tsoft <- cos(pi/2 - theta.soft)
+    sin.tsoft <- sin(pi/2 - theta.soft)
+    
+    for(i in 1:n.traits){
+      xx2 <- (length.phylo+length.intergr*i+length.gr*(i-1)) * cos.tsoft
+      yy2 <- (length.phylo+length.intergr*i+length.gr*(i-1)) * sin.tsoft
+      lines(xx2, yy2, col="grey")
+      xx2 <- (length.phylo+length.intergr*i+length.gr*i) * cos.tsoft
+      yy2 <- (length.phylo+length.intergr*i+length.gr*i) * sin.tsoft
+      lines(xx2, yy2, col="grey")
+      
+      if(abs(sign(min(X[, i])) + sign(max(X[, i]))) == 2){
+        X.scale <- X[, i] * length.gr / max(abs(min(X[, i])), abs(max(X[, i])))
+      } else {
+        X.scale <- X[, i] * length.gr / diff(c(min(X[, i]), max(X[, i])))
+      }
+      
+      length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
+                          ifelse(min(X.scale) < 0, abs(min(X.scale)), 0))
+      length.baseline <- rep(length.baseline, n.tips)
+      length.values <- length.baseline + X.scale
+      segments(x0 = length.baseline * cos.t,
+               x1 = length.values * cos.t,
+               y0 = length.baseline * sin.t,
+               y1 = length.values * sin.t,
+               lwd = bar.lwd, col = bar.col[, i])
+      
+      lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 2)
+      
+    }
+    
+
+    
   }
   
-  assign("last_barplotp4d", list(plot.type = plot.type,
-                                 show.tip = show.tip,
-                                 layout = lay,
-                                 fig.tree = fig.tree,
-                                 fig.traits = fig.traits,
-                                 fig.tip = fig.tip,
-                                 tree.xlim = tree.xlim,
-                                 bar.xlim = bar.xlim,
-                                 tip.xlim = tip.xlim,
-                                 ylim = ylim, par.mar0 = par.mar0), 
-         envir = .PlotPhyloEnv)
-  layout(1)
+  
   par(mar = par.mar0)
   invisible()
 }
