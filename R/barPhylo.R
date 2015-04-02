@@ -237,6 +237,10 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   }
   
   ###
+  par.mar0 <- par("mar")
+  par.lend0 <- par("lend")
+  par.xpd0 <- par("xpd")
+  
   if(tree.type == "phylogram" | tree.type == "cladogram"){
     
     if(plot.type %in% c("barplot", "dotplot")){
@@ -249,9 +253,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     }
     
     layout(lay, widths = lay.w)
-    par(xpd = FALSE)
-    par.mar0 <- par("mar")
-    par(mar=c(5, 1, 4, 0), lend = 1)
+    par(xpd = FALSE, mar=c(5, 1, 4, 0), lend = 1)
     fig.traits <- vector("list", n.traits)
     names(fig.traits) <- trait
     
@@ -383,8 +385,8 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   
 
   if(tree.type == "fan"){
-    par.mar0 <- par("mar")
     
+    par(lend = 1)
     if(is.null(tree.ratio)){
       if(show.tip){
         tree.ratio <- 1 / (n.traits + 2)
@@ -397,11 +399,13 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                x.lim = tree.xlim * (1/tree.ratio), y.lim = NULL,
                no.margin = TRUE, ...)
     lp <- get("last_plot.phylo", envir = .PlotPhyloEnv)
-    
-    #lines(lp$xx[1:n.tips][new.order], lp$yy[1:n.tips][new.order])
-    
+        
     length.phylo <- sqrt(lp$xx[1]^2 + lp$yy[1])
-    length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / n.traits
+    if(show.tip){
+      length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / (n.traits+1)
+    } else {
+      length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / n.traits
+    }
     length.intergr <- 0.2 * length.gr0
     length.gr <- length.gr0 - length.intergr
     
@@ -414,19 +418,21 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     sin.tsoft <- sin(pi/2 - theta.soft)
     
     for(i in 1:n.traits){
-      xx2 <- (length.phylo+length.intergr*i+length.gr*(i-1)) * cos.tsoft
-      yy2 <- (length.phylo+length.intergr*i+length.gr*(i-1)) * sin.tsoft
-      lines(xx2, yy2, col="grey")
-      xx2 <- (length.phylo+length.intergr*i+length.gr*i) * cos.tsoft
-      yy2 <- (length.phylo+length.intergr*i+length.gr*i) * sin.tsoft
-      lines(xx2, yy2, col="grey")
+      # RINGS
+      xx1 <- (length.phylo+length.intergr*i+length.gr*(i-1)-0.3*length.intergr) * cos.tsoft
+      yy1 <- (length.phylo+length.intergr*i+length.gr*(i-1)-0.3*length.intergr) * sin.tsoft
+      xx2 <- (length.phylo+length.intergr*i+length.gr*i+0.3*length.intergr) * cos.tsoft
+      yy2 <- (length.phylo+length.intergr*i+length.gr*i+0.3*length.intergr) * sin.tsoft
+      polygon(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = trait.bg.col, border = NA)
       
+      # SCALING VALUES
       if(abs(sign(min(X[, i])) + sign(max(X[, i]))) == 2){
         X.scale <- X[, i] * length.gr / max(abs(min(X[, i])), abs(max(X[, i])))
       } else {
         X.scale <- X[, i] * length.gr / diff(c(min(X[, i]), max(X[, i])))
       }
       
+      # BASELINE AND BARS
       length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
                           ifelse(min(X.scale) < 0, abs(min(X.scale)), 0))
       length.baseline <- rep(length.baseline, n.tips)
@@ -437,16 +443,70 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                y1 = length.values * sin.t,
                lwd = bar.lwd, col = bar.col[, i])
       
-      lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 2)
+      lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
       
+      #AXES
+      if(show.bar.axis){
+        theta.ax <- (theta[2] + theta[1]) / 2 + abs((theta[2] - theta[1]))
+        cos.tax <- cos(pi/2 - theta.ax)
+        sin.tax <- sin(pi/2 - theta.ax)
+        cos.taxmin <- cos(pi/2 - (theta.ax - 0.05))
+        sin.taxmin <- sin(pi/2 - (theta.ax - 0.05))
+        if(min(X.scale) <= 0 & max(X.scale) >=0){
+          ticks <- axisTicks(c(min(X.scale), max(X.scale)), log = FALSE)
+        } else {
+          if(abs(min(X.scale)) > max(X.scale)){
+            ticks <- axisTicks(c(0, min(X.scale)), log = FALSE)
+          } else {
+            ticks <- axisTicks(c(0, max(X.scale)), log = FALSE)
+          }
+        }
+        length.ticks <- length.baseline[1] + ticks
+        segments(x0 = min(length.ticks) * cos.tax,
+                 x1 = max(length.ticks) * cos.tax,
+                 y0 = min(length.ticks) * sin.tax,
+                 y1 = max(length.ticks) * sin.tax,
+                 lwd = 1, col = 1)
+        text(x = length.ticks * cos.tax, 
+             y = length.ticks * sin.tax,
+             labels = "|", srt = (-pi/2-theta.ax) * 180 /pi, cex = 0.4)
+        text(x = length.ticks * cos.tax, 
+             y = length.ticks * sin.tax,
+             labels = ticks, cex = tip.cex, pos = 1, offset = 0.2)
+        
+        for(i in 1:length(length.ticks)){
+          lines(length.ticks[i] * cos.tsoft, length.ticks[i] * sin.tsoft, col = grid.col, lty = grid.lty)
+        }
+      }
     }
     
-
+    if(show.tip){
+      
+      length.tipsline <- (length.phylo+length.intergr*(n.traits+1)+length.gr*(n.traits))
+      tip.xlim <- c(-1, 1)
+      if(tip.adj < 0.5) tip.xlim[1] <- -tip.adj / 0.5
+      if(tip.adj > 0.5) tip.xlim[2] <- -2 * tip.adj + 2
+      
+      for(i in 1:n.tips){
+        if(theta[i] > 0){
+          text(x = length.tipsline * cos.t[i],
+               y = length.tipsline * sin.t[i],
+               labels = tip.labels[i],
+               adj = 0, col = tip.col[i], cex = tip.cex[i], font = tip.font[i],
+               srt = (pi/2-theta[i]) * 180 /pi)
+        } else {
+          text(x = length.tipsline * cos.t[i],
+               y = length.tipsline * sin.t[i],
+               labels = tip.labels[i],
+               adj = 1, col = tip.col[i], cex = tip.cex[i], font = tip.font[i],
+               srt = (-pi/2-theta[i]) * 180 /pi)
+        }
+      }
+    }
     
   }
   
-  
-  par(mar = par.mar0)
+  par(mar = par.mar0, xpd = par.xpd0, lend = par.lend0)
   invisible()
 }
 
