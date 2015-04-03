@@ -16,6 +16,9 @@
 #' @param tree.ratio a numeric value in [0, 1] giving the proportion of width of the figure for the tree.
 #' @param tree.xlim a numeric vector of length 2 giving the limits of the x-axis for the tree. If \code{NULL},
 #' it is determined automatically.
+#' @param tree.open.angle a numeric value giving the angle in degrees left blank if \code{tree.type = "fan"}.
+#' @param tree.open.crown a logical indicating whether the crowns should be drawn following the value
+#' of \code{tree.open.angle} (default \code{TRUE}).
 #' 
 #' @param show.tip logical indicating whether tips labels should be drawn.
 #' @param tip.labels character vector to label the tips.
@@ -64,6 +67,7 @@
 #' 1 (plain text), 2 (bold), 3 (italic), or 4 (bold italic). Recycled if necessary.
 #' @param trait.bg.col a vector of R colors (code or name) to use for the background of the barplots.
 #' Recycled if necessary.
+#' 
 #' @param error.bar.sup a matrix giving the superior limit for error bars.
 #' Columns and rows names must match with traits and tips labels.
 #' @param error.bar.inf a matrix giving the inferior limit for error bars.
@@ -80,6 +84,7 @@
 #' @export
 multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, plot.type = "barplot",
                      tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+                     tree.open.angle = 0, tree.open.crown = TRUE,
                      show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
                      bar.xlim = NULL, bar.lwd = 10, bar.col = "grey35", show.bar.axis = TRUE,
                      dot.col = "black", dot.pch = 20, dot.cex = 2,
@@ -385,7 +390,6 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   
 
   if(tree.type == "fan"){
-    
     par(lend = 1)
     if(is.null(tree.ratio)){
       if(show.tip){
@@ -397,10 +401,10 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     
     plot.phylo(phy, type = tree.type, show.tip.label = FALSE,
                x.lim = tree.xlim * (1/tree.ratio), y.lim = NULL,
-               no.margin = TRUE, ...)
+               no.margin = TRUE, open.angle = tree.open.angle, rotate.tree = 0, ...)
     lp <- get("last_plot.phylo", envir = .PlotPhyloEnv)
         
-    length.phylo <- sqrt(lp$xx[1]^2 + lp$yy[1])
+    length.phylo <- sqrt(lp$xx[1]^2 + lp$yy[1]^2)
     if(show.tip){
       length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / (n.traits+1)
     } else {
@@ -413,17 +417,32 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     cos.t <- cos(pi/2 - theta)
     sin.t <- sin(pi/2 - theta)
     
-    theta.soft <- seq(0, 360) * pi/180
+    if(tree.open.crown){
+      theta.soft <- pi/2 - seq(0, 360 - tree.open.angle) * pi/180 + 10 * pi/180
+    } else {
+      theta.soft <- pi/2 - seq(0, 360) * pi/180 + 10 * pi/180
+    }
     cos.tsoft <- cos(pi/2 - theta.soft)
     sin.tsoft <- sin(pi/2 - theta.soft)
     
     for(i in 1:n.traits){
       # RINGS
-      xx1 <- (length.phylo+length.intergr*i+length.gr*(i-1)-0.3*length.intergr) * cos.tsoft
-      yy1 <- (length.phylo+length.intergr*i+length.gr*(i-1)-0.3*length.intergr) * sin.tsoft
-      xx2 <- (length.phylo+length.intergr*i+length.gr*i+0.3*length.intergr) * cos.tsoft
-      yy2 <- (length.phylo+length.intergr*i+length.gr*i+0.3*length.intergr) * sin.tsoft
-      polygon(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = trait.bg.col, border = NA)
+      length.ring1 <- length.phylo + length.intergr*i + length.gr*(i-1) - 0.3*length.intergr
+      length.ring2 <- length.phylo + length.intergr*i + length.gr*i + 0.3*length.intergr
+      xx1 <- length.ring1 * cos.tsoft
+      xx2 <- length.ring2 * cos.tsoft
+      yy1 <- length.ring1 * sin.tsoft
+      yy2 <- length.ring2 * sin.tsoft
+      polygon(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = trait.bg.col[i], border = NA)
+      if(show.box){
+        if(tree.open.crown){
+          lines(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = 1)
+        } else {
+          lines(xx1, yy1, col = 1)
+          lines(xx2, yy2, col = 1)          
+        } 
+      }
+      
       
       # SCALING VALUES
       if(abs(sign(min(X[, i])) + sign(max(X[, i]))) == 2){
@@ -432,52 +451,76 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         X.scale <- X[, i] * length.gr / diff(c(min(X[, i]), max(X[, i])))
       }
       
-      # BASELINE AND BARS
+      # BASELINE AND VALUES
       length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
                           ifelse(min(X.scale) < 0, abs(min(X.scale)), 0))
       length.baseline <- rep(length.baseline, n.tips)
       length.values <- length.baseline + X.scale
+      
+      #Grid Species
+      if(grid.horizontal){
+        segments(x0 = length.ring1 * cos.t,
+                 x1 = length.ring2 * cos.t,
+                 y0 = length.ring1 * sin.t,
+                 y1 = length.ring2 * sin.t,
+                 col = grid.col, lty = grid.lty)
+      }
+      
+      # Axe and circular grid
+      if(show.bar.axis | grid.vertical){
+        if(tree.open.crown){
+          theta.ax <- theta.soft[1]
+        } else {
+          theta.ax <-theta.soft[1] + tree.open.angle/2 * pi/180
+        }
+        cos.tax <- cos(pi/2 - theta.ax)
+        sin.tax <- sin(pi/2 - theta.ax)
+        nint.ticks <- round((length.gr / min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]))/3 *100) - 1
+        if(min(X.scale) <= 0 & max(X.scale) >=0){
+          ticks <- axisTicks(c(min(X.scale), max(X.scale)), log = FALSE, nint = nint.ticks)
+        } else {
+          if(abs(min(X.scale)) > max(X.scale)){
+            ticks <- axisTicks(c(0, min(X.scale)), log = FALSE, nint = nint.ticks)
+          } else {
+            ticks <- axisTicks(c(0, max(X.scale)), log = FALSE, nint = nint.ticks)
+          }
+        }
+        
+        length.ticks <- length.baseline[1] + ticks
+        
+        # Grid Axis values
+        if(grid.vertical){
+          for(j in 1:length(length.ticks)){
+            lines(length.ticks[j] * cos.tsoft,
+                  length.ticks[j] * sin.tsoft,
+                  col = grid.col, lty = grid.lty)
+          }
+        }
+        
+        if(show.bar.axis){
+          # Frame for axis values
+          segments(x0 = length.ring1 * cos.tax,
+                   x1 = length.ring2 * cos.tax,
+                   y0 = length.ring1 * sin.tax,
+                   y1 = length.ring2 * sin.tax,
+                   lwd = 20, col = trait.bg.col[i])
+          
+          # Axis Values
+          text(x = length.ticks * cos.tax, 
+               y = length.ticks * sin.tax,
+               labels = ticks, cex = tip.cex)
+        }
+      }
+      
+      # Draw Bars
       segments(x0 = length.baseline * cos.t,
                x1 = length.values * cos.t,
                y0 = length.baseline * sin.t,
                y1 = length.values * sin.t,
                lwd = bar.lwd, col = bar.col[, i])
-      
+      # Draw Baseline
+      length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
       lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
-      
-      #AXES
-      if(show.bar.axis){
-        theta.ax <- (theta[2] + theta[1]) / 2 + abs((theta[2] - theta[1]))
-        cos.tax <- cos(pi/2 - theta.ax)
-        sin.tax <- sin(pi/2 - theta.ax)
-        cos.taxmin <- cos(pi/2 - (theta.ax - 0.05))
-        sin.taxmin <- sin(pi/2 - (theta.ax - 0.05))
-        if(min(X.scale) <= 0 & max(X.scale) >=0){
-          ticks <- axisTicks(c(min(X.scale), max(X.scale)), log = FALSE)
-        } else {
-          if(abs(min(X.scale)) > max(X.scale)){
-            ticks <- axisTicks(c(0, min(X.scale)), log = FALSE)
-          } else {
-            ticks <- axisTicks(c(0, max(X.scale)), log = FALSE)
-          }
-        }
-        length.ticks <- length.baseline[1] + ticks
-        segments(x0 = min(length.ticks) * cos.tax,
-                 x1 = max(length.ticks) * cos.tax,
-                 y0 = min(length.ticks) * sin.tax,
-                 y1 = max(length.ticks) * sin.tax,
-                 lwd = 1, col = 1)
-        text(x = length.ticks * cos.tax, 
-             y = length.ticks * sin.tax,
-             labels = "|", srt = (-pi/2-theta.ax) * 180 /pi, cex = 0.4)
-        text(x = length.ticks * cos.tax, 
-             y = length.ticks * sin.tax,
-             labels = ticks, cex = tip.cex, pos = 1, offset = 0.2)
-        
-        for(i in 1:length(length.ticks)){
-          lines(length.ticks[i] * cos.tsoft, length.ticks[i] * sin.tsoft, col = grid.col, lty = grid.lty)
-        }
-      }
     }
     
     if(show.tip){
