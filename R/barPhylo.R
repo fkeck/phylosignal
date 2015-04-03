@@ -11,8 +11,11 @@
 #' in the table of the data slot of the p4d object. Can be used to reorder the traits in the plot.
 #' @param center a logical indicating whether traits values should be centered.
 #' @param scale a logical indicating whether traits values should be scaled.
+#' @param plot.type a character string specifying the type of plot for traits data.
+#' Can be \code{"barplot"}, \code{"dotplot"} or \code{"gridplot"}.
 #' 
-#' @param tree.type a character string specifying the type of phylogeny to be drawn ("phylogram" or "cladogram").
+#' @param tree.type a character string specifying the type of phylogeny to be drawn.
+#' Can be \code{"phylogram"}, \code{"cladogram"} or \code{fan}.
 #' @param tree.ratio a numeric value in [0, 1] giving the proportion of width of the figure for the tree.
 #' @param tree.xlim a numeric vector of length 2 giving the limits of the x-axis for the tree. If \code{NULL},
 #' it is determined automatically.
@@ -512,7 +515,8 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         }
       }
       
-      # Draw Bars
+      # Draw Values
+      if()
       segments(x0 = length.baseline * cos.t,
                x1 = length.values * cos.t,
                y0 = length.baseline * sin.t,
