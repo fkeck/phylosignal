@@ -460,6 +460,10 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       length.baseline <- rep(length.baseline, n.tips)
       length.values <- length.baseline + X.scale
       
+      # Draw Baseline
+      length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
+      lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
+      
       #Grid Species
       if(grid.horizontal){
         segments(x0 = length.ring1 * cos.t,
@@ -516,15 +520,22 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       }
       
       # Draw Values
-      if()
-      segments(x0 = length.baseline * cos.t,
-               x1 = length.values * cos.t,
-               y0 = length.baseline * sin.t,
-               y1 = length.values * sin.t,
-               lwd = bar.lwd, col = bar.col[, i])
-      # Draw Baseline
-      length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
-      lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
+      length.baseline <- rep(length.baseline, length.out = length(cos.t))
+      if(plot.type == "barplot"){
+        segments(x0 = length.baseline * cos.t,
+                 x1 = length.values * cos.t,
+                 y0 = length.baseline * sin.t,
+                 y1 = length.values * sin.t,
+                 lwd = bar.lwd, col = bar.col[, i])
+      }
+      if(plot.type == "dotplot"){
+        points(x = length.values * cos.t,
+               y = length.values * sin.t,
+               col = dot.col[, i],
+               pch= dot.pch[, i],
+               cex = dot.cex[, i])
+      }
+
     }
     
     if(show.tip){
