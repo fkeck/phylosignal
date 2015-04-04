@@ -449,16 +449,35 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       
       # SCALING VALUES
       if(abs(sign(min(X[, i])) + sign(max(X[, i]))) == 2){
-        X.scale <- X[, i] * length.gr / max(abs(min(X[, i])), abs(max(X[, i])))
+        X.scale <- X[, i] * length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
+        if(!is.null(error.bar.inf)){
+          arrow.inf.scale <- arrow.inf[, i] * length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
+        }
+        if(!is.null(error.bar.sup)){
+          arrow.sup.scale <- arrow.sup[, i] * length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
+        }
       } else {
-        X.scale <- X[, i] * length.gr / diff(c(min(X[, i]), max(X[, i])))
+        X.scale <- X[, i] * length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
+        if(!is.null(error.bar.inf)){
+          arrow.inf.scale <- arrow.inf[, i] * length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
+        }
+        if(!is.null(error.bar.sup)){
+          arrow.sup.scale <- arrow.sup[, i] * length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
+        }
       }
+      
       
       # BASELINE AND VALUES
       length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
                           ifelse(min(X.scale) < 0, abs(min(X.scale)), 0))
       length.baseline <- rep(length.baseline, n.tips)
       length.values <- length.baseline + X.scale
+      if(!is.null(error.bar.inf)){
+        length.arrow.inf <- length.baseline + arrow.inf.scale
+      }
+      if(!is.null(error.bar.sup)){
+        length.arrow.sup <- length.baseline + arrow.sup.scale
+      }
       
       # Draw Baseline
       length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
@@ -535,6 +554,27 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                pch= dot.pch[, i],
                cex = dot.cex[, i])
       }
+      
+      # Draw Error Bars
+      options(warn = -1)
+      if(!is.null(error.bar.inf)){
+        arrows(x0 = length.values * cos.t,
+               x1 = length.arrow.inf * cos.t,
+               y0 = length.values * sin.t,
+               y1 = length.arrow.inf * sin.t,
+               lwd = 1, col = error.bar.col,
+               angle = 90, length = 0.04)
+      }
+      
+      if(!is.null(error.bar.sup)){
+        arrows(x0 = length.values * cos.t,
+               x1 = length.arrow.sup * cos.t,
+               y0 = length.values * sin.t,
+               y1 = length.arrow.sup * sin.t,
+               lwd = 1, col = error.bar.col,
+               angle = 90, length = 0.04)
+      }
+      options(warn = 1)
 
     }
     
