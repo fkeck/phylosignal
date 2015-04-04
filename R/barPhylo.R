@@ -448,28 +448,24 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       
       
       # SCALING VALUES
-      if(abs(sign(min(X[, i])) + sign(max(X[, i]))) == 2){
-        X.scale <- X[, i] * length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
-        if(!is.null(error.bar.inf)){
-          arrow.inf.scale <- arrow.inf[, i] * length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
-        }
-        if(!is.null(error.bar.sup)){
-          arrow.sup.scale <- arrow.sup[, i] * length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
-        }
+      if(abs(sign(min(bar.xlim[, i])) + sign(max(bar.xlim[, i]))) == 2){
+        scaling.factor <- length.gr / max(abs(min(bar.xlim[, i])), abs(max(bar.xlim[, i])))
       } else {
-        X.scale <- X[, i] * length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
-        if(!is.null(error.bar.inf)){
-          arrow.inf.scale <- arrow.inf[, i] * length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
-        }
-        if(!is.null(error.bar.sup)){
-          arrow.sup.scale <- arrow.sup[, i] * length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
-        }
+        scaling.factor <- length.gr / diff(c(min(bar.xlim[, i]), max(bar.xlim[, i])))
       }
+      X.scale <- X[, i] * scaling.factor
+      bar.xlim.scale <- bar.xlim[, i] * scaling.factor
       
+      if(!is.null(error.bar.inf)){
+        arrow.inf.scale <- arrow.inf[, i] * scaling.factor
+      }
+      if(!is.null(error.bar.sup)){
+        arrow.sup.scale <- arrow.sup[, i] * scaling.factor
+      }
       
       # BASELINE AND VALUES
       length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
-                          ifelse(min(X.scale) < 0, abs(min(X.scale)), 0))
+                          ifelse(min(bar.xlim.scale) < 0, abs(min(bar.xlim.scale)), 0))
       length.baseline <- rep(length.baseline, n.tips)
       length.values <- length.baseline + X.scale
       if(!is.null(error.bar.inf)){
@@ -503,18 +499,18 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         sin.tax <- sin(pi/2 - theta.ax)
         nint.ticks <- round((length.gr / min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]))/3 *100) - 1
         if(min(X.scale) <= 0 & max(X.scale) >=0){
-          ticks <- axisTicks(c(min(X.scale), max(X.scale)), log = FALSE, nint = nint.ticks)
+          ticks <- axisTicks(c(min(X.scale)/scaling.factor, max(X.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
         } else {
           if(abs(min(X.scale)) > max(X.scale)){
-            ticks <- axisTicks(c(0, min(X.scale)), log = FALSE, nint = nint.ticks)
+            ticks <- axisTicks(c(0, min(X.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
           } else {
-            ticks <- axisTicks(c(0, max(X.scale)), log = FALSE, nint = nint.ticks)
+            ticks <- axisTicks(c(0, max(X.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
           }
         }
         
-        length.ticks <- length.baseline[1] + ticks
+        length.ticks <- length.baseline[1] + ticks * scaling.factor
         
-        # Grid Axis values
+        # Circular Grid
         if(grid.vertical){
           for(j in 1:length(length.ticks)){
             lines(length.ticks[j] * cos.tsoft,
