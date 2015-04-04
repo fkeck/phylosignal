@@ -488,7 +488,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                  col = grid.col, lty = grid.lty)
       }
       
-      # Axe and circular grid
+      # Axis and circular grid
       if(show.bar.axis | grid.vertical){
         if(tree.open.crown){
           theta.ax <- theta.soft[1]
@@ -498,15 +498,17 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         cos.tax <- cos(pi/2 - theta.ax)
         sin.tax <- sin(pi/2 - theta.ax)
         nint.ticks <- round((length.gr / min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]))/3 *100) - 1
-        if(min(X.scale) <= 0 & max(X.scale) >=0){
-          ticks <- axisTicks(c(min(X.scale)/scaling.factor, max(X.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+        if(min(bar.xlim.scale) <= 0 & max(bar.xlim.scale) >=0){
+          ticks <- axisTicks(c(min(bar.xlim.scale)/scaling.factor,
+                               max(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
         } else {
-          if(abs(min(X.scale)) > max(X.scale)){
-            ticks <- axisTicks(c(0, min(X.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+          if(abs(min(bar.xlim.scale)) > max(bar.xlim.scale)){
+            ticks <- axisTicks(c(0, min(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
           } else {
-            ticks <- axisTicks(c(0, max(X.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+            ticks <- axisTicks(c(0, max(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
           }
         }
+        ticks <- ifelse(ticks > max(bar.xlim.scale)/scaling.factor, NA, ticks)
         
         length.ticks <- length.baseline[1] + ticks * scaling.factor
         
