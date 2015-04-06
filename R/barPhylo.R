@@ -393,6 +393,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   
 
   if(tree.type == "fan"){
+    
     par(lend = 1)
     if(is.null(tree.ratio)){
       if(show.tip){
@@ -463,76 +464,84 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         arrow.sup.scale <- arrow.sup[, i] * scaling.factor
       }
       
-      # BASELINE AND VALUES
-      length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
-                          ifelse(min(bar.xlim.scale) < 0, abs(min(bar.xlim.scale)), 0))
-      length.baseline <- rep(length.baseline, n.tips)
-      length.values <- length.baseline + X.scale
-      if(!is.null(error.bar.inf)){
-        length.arrow.inf <- length.baseline + arrow.inf.scale
-      }
-      if(!is.null(error.bar.sup)){
-        length.arrow.sup <- length.baseline + arrow.sup.scale
-      }
       
-      # Draw Baseline
-      length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
-      lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
-      
-      #Grid Species
-      if(grid.horizontal){
-        segments(x0 = length.ring1 * cos.t,
-                 x1 = length.ring2 * cos.t,
-                 y0 = length.ring1 * sin.t,
-                 y1 = length.ring2 * sin.t,
-                 col = grid.col, lty = grid.lty)
-      }
-      
-      # Axis and circular grid
-      if(show.bar.axis | grid.vertical){
-        if(tree.open.crown){
-          theta.ax <- theta.soft[1]
-        } else {
-          theta.ax <-theta.soft[1] + tree.open.angle*(1/3) * pi/180
+      # FOR BARPLOT AND DOTPLOT
+        # Baseline and Values
+      if(plot.type == "barplot" | plot.type == "dotplot"){
+        length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
+                            ifelse(min(bar.xlim.scale) < 0, abs(min(bar.xlim.scale)), 0))
+        length.baseline <- rep(length.baseline, n.tips)
+        length.values <- length.baseline + X.scale
+        if(!is.null(error.bar.inf)){
+          length.arrow.inf <- length.baseline + arrow.inf.scale
         }
-        cos.tax <- cos(pi/2 - theta.ax)
-        sin.tax <- sin(pi/2 - theta.ax)
-        nint.ticks <- round((length.gr / min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]))/3 *100) - 1
-        if(min(bar.xlim.scale) <= 0 & max(bar.xlim.scale) >=0){
-          ticks <- axisTicks(c(min(bar.xlim.scale)/scaling.factor,
-                               max(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
-        } else {
-          if(abs(min(bar.xlim.scale)) > max(bar.xlim.scale)){
-            ticks <- axisTicks(c(0, min(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+        if(!is.null(error.bar.sup)){
+          length.arrow.sup <- length.baseline + arrow.sup.scale
+        }
+        
+        # Draw Baseline
+        length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
+        lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
+      
+        #Grid Species
+        if(grid.horizontal){
+          segments(x0 = length.ring1 * cos.t,
+                   x1 = length.ring2 * cos.t,
+                   y0 = length.ring1 * sin.t,
+                   y1 = length.ring2 * sin.t,
+                   col = grid.col, lty = grid.lty)
+        }
+      
+        # Axis and circular grid
+        if((show.bar.axis | grid.vertical)){
+          if(tree.open.crown){
+            theta.ax <- theta.soft[1]
           } else {
-            ticks <- axisTicks(c(0, max(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+            if(show.trait){
+              theta.ax <-theta.soft[1] + tree.open.angle*(1/3) * pi/180
+            } else {
+              theta.ax <-theta.soft[1] + tree.open.angle*(1/2) * pi/180
+            }
           }
-        }
-        ticks <- ifelse(ticks > max(bar.xlim.scale)/scaling.factor, NA, ticks)
-        
-        length.ticks <- length.baseline[1] + ticks * scaling.factor
-        
-        # Circular Grid
-        if(grid.vertical){
-          for(j in 1:length(length.ticks)){
-            lines(length.ticks[j] * cos.tsoft,
-                  length.ticks[j] * sin.tsoft,
-                  col = grid.col, lty = grid.lty)
+          cos.tax <- cos(pi/2 - theta.ax)
+          sin.tax <- sin(pi/2 - theta.ax)
+          nint.ticks <- round((length.gr / min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]))/3 *100) - 1
+          if(min(bar.xlim.scale) <= 0 & max(bar.xlim.scale) >=0){
+            ticks <- axisTicks(c(min(bar.xlim.scale)/scaling.factor,
+                                 max(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+          } else {
+            if(abs(min(bar.xlim.scale)) > max(bar.xlim.scale)){
+              ticks <- axisTicks(c(0, min(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+            } else {
+              ticks <- axisTicks(c(0, max(bar.xlim.scale)/scaling.factor), log = FALSE, nint = nint.ticks)
+            }
           }
-        }
-        
-        if(show.bar.axis){
-          # Frame for axis values
-          segments(x0 = length.ring1 * cos.tax,
-                   x1 = length.ring2 * cos.tax,
-                   y0 = length.ring1 * sin.tax,
-                   y1 = length.ring2 * sin.tax,
-                   lwd = 20, col = trait.bg.col[i])
+          ticks <- ifelse(ticks > max(bar.xlim.scale)/scaling.factor, NA, ticks)
           
-          # Axis Values
-          text(x = length.ticks * cos.tax, 
-               y = length.ticks * sin.tax,
-               labels = ticks, cex = tip.cex)
+          length.ticks <- length.baseline[1] + ticks * scaling.factor
+          
+          # Circular Grid
+          if(grid.vertical){
+            for(j in 1:length(length.ticks)){
+              lines(length.ticks[j] * cos.tsoft,
+                    length.ticks[j] * sin.tsoft,
+                    col = grid.col, lty = grid.lty)
+            }
+          }
+          
+          if(show.bar.axis){
+            # Frame for axis values
+            segments(x0 = length.ring1 * cos.tax,
+                     x1 = length.ring2 * cos.tax,
+                     y0 = length.ring1 * sin.tax,
+                     y1 = length.ring2 * sin.tax,
+                     lwd = 20, col = trait.bg.col[i])
+            
+            # Axis Values
+            text(x = length.ticks * cos.tax, 
+                 y = length.ticks * sin.tax,
+                 labels = ticks, cex = tip.cex)
+          }
         }
       }
       
@@ -541,7 +550,11 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         if(tree.open.crown){
           theta.trait <- theta.soft[length(theta.soft)]
         } else {
-          theta.trait <-theta.soft[length(theta.soft)] + tree.open.angle*(2/3) * pi/180
+          if(show.bar.axis & (plot.type == "barplot" | plot.type == "dotplot")){
+            theta.trait <-theta.soft[length(theta.soft)] + tree.open.angle*(2/3) * pi/180
+          } else {
+            theta.trait <-theta.soft[length(theta.soft)] + tree.open.angle*(1/2) * pi/180
+          }
         }
         cos.ttrait <- cos(pi/2 - theta.trait)
         sin.ttrait <- sin(pi/2 - theta.trait)
@@ -563,8 +576,8 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       }
       
       # Draw Values
-      length.baseline <- rep(length.baseline, length.out = length(cos.t))
       if(plot.type == "barplot"){
+        length.baseline <- rep(length.baseline, length.out = length(cos.t))
         segments(x0 = length.baseline * cos.t,
                  x1 = length.values * cos.t,
                  y0 = length.baseline * sin.t,
@@ -572,6 +585,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                  lwd = bar.lwd, col = bar.col[, i])
       }
       if(plot.type == "dotplot"){
+        length.baseline <- rep(length.baseline, length.out = length(cos.t))
         points(x = length.values * cos.t,
                y = length.values * sin.t,
                col = dot.col[, i],
@@ -579,27 +593,68 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                cex = dot.cex[, i])
       }
       
-      # Draw Error Bars
-      options(warn = -1)
-      if(!is.null(error.bar.inf)){
-        arrows(x0 = length.values * cos.t,
-               x1 = length.arrow.inf * cos.t,
-               y0 = length.values * sin.t,
-               y1 = length.arrow.inf * sin.t,
-               lwd = 1, col = error.bar.col,
-               angle = 90, length = 0.04)
+      # GRIDPLOT
+      if(plot.type == "gridplot"){
+        nc <- length(cell.col)
+        X.cut <- as.numeric(cut(as.matrix(X), nc))
+        grid.colors <- cell.col[X.cut]
+        grid.colors <- matrix(grid.colors, ncol = n.traits)
+        
+        theta.grid1 <- theta + pi/2 - (theta[1] + theta[2])/2
+        theta.grid2 <- theta - pi/2 + (theta[1] + theta[2])/2
+        
+        for(k in 1:length(theta)){
+          xx1 <- length.ring1 * cos(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          xx2 <- length.ring2 * cos(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          yy1 <- length.ring1 * sin(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          yy2 <- length.ring2 * sin(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          polygon(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = grid.colors[k, i] , border = NA)
+        }
+        if(grid.horizontal){
+          segments(x0 = length.ring1 * cos(pi/2 - theta.grid1),
+                   y0 = length.ring1 * sin(pi/2 - theta.grid1),
+                   x1 = length.ring2 * cos(pi/2 - theta.grid1),
+                   y1 = length.ring2 * sin(pi/2 - theta.grid1),
+                   col = grid.col, lty = grid.lty)
+          segments(x0 = length.ring1 * cos(pi/2 - theta.grid2[length(theta.grid2)]),
+                   y0 = length.ring1 * sin(pi/2 - theta.grid2[length(theta.grid2)]),
+                   x1 = length.ring2 * cos(pi/2 - theta.grid2[length(theta.grid2)]),
+                   y1 = length.ring2 * sin(pi/2 - theta.grid2[length(theta.grid2)]),
+                   col = grid.col, lty = grid.lty)
+        }
+        if(grid.vertical){
+          if(i > 1){
+            lines((length.ring1 - length.intergr/2 + 0.3*length.intergr) * cos.tsoft,
+                  (length.ring1 - length.intergr/2 + 0.3*length.intergr) * sin.tsoft,
+                  col = grid.col, lty = grid.lty)
+          }
+        }
       }
       
-      if(!is.null(error.bar.sup)){
-        arrows(x0 = length.values * cos.t,
-               x1 = length.arrow.sup * cos.t,
-               y0 = length.values * sin.t,
-               y1 = length.arrow.sup * sin.t,
-               lwd = 1, col = error.bar.col,
-               angle = 90, length = 0.04)
+      
+      # Draw Error Bars
+      if(plot.type == "barplot" | plot.type == "dotplot"){
+        options(warn = -1)
+        if(!is.null(error.bar.inf)){
+          arrows(x0 = length.values * cos.t,
+                 x1 = length.arrow.inf * cos.t,
+                 y0 = length.values * sin.t,
+                 y1 = length.arrow.inf * sin.t,
+                 lwd = 1, col = error.bar.col,
+                 angle = 90, length = 0.04)
+        }
+        
+        if(!is.null(error.bar.sup)){
+          arrows(x0 = length.values * cos.t,
+                 x1 = length.arrow.sup * cos.t,
+                 y0 = length.values * sin.t,
+                 y1 = length.arrow.sup * sin.t,
+                 lwd = 1, col = error.bar.col,
+                 angle = 90, length = 0.04)
+        }
+        options(warn = 1)
       }
-      options(warn = 1)
-
+    
     }
     
     if(show.tip){
