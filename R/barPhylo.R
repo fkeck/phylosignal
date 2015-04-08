@@ -418,11 +418,15 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     length.gr <- length.gr0 - length.intergr
     
     theta <- atan2(lp$xx[1:n.tips], lp$yy[1:n.tips])[new.order]
+    theta[theta > (pi/2)] <- -pi - (pi - theta[theta > (pi/2)])
     cos.t <- cos(pi/2 - theta)
     sin.t <- sin(pi/2 - theta)
     
+    theta.real.open <- diff(c(min(theta), max(theta)))
+    real.open <- theta.real.open * 180/pi
+    
     if(tree.open.crown){
-      theta.soft <- pi/2 - seq(0, 360 - tree.open.angle) * pi/180 + 10 * pi/180
+      theta.soft <- pi/2 - seq(-5, real.open+5, length.out=300) * pi/180
     } else {
       theta.soft <- pi/2 - seq(0, 360) * pi/180 + 10 * pi/180
     }
@@ -438,15 +442,6 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       yy1 <- length.ring1 * sin.tsoft
       yy2 <- length.ring2 * sin.tsoft
       polygon(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = trait.bg.col[i], border = NA)
-      if(show.box){
-        if(tree.open.crown){
-          lines(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = 1)
-        } else {
-          lines(xx1, yy1, col = 1)
-          lines(xx2, yy2, col = 1)          
-        } 
-      }
-      
       
       # SCALING VALUES
       if(abs(sign(min(bar.xlim[, i])) + sign(max(bar.xlim[, i]))) == 2){
@@ -463,7 +458,6 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       if(!is.null(error.bar.sup)){
         arrow.sup.scale <- arrow.sup[, i] * scaling.factor
       }
-      
       
       # FOR BARPLOT AND DOTPLOT
         # Baseline and Values
@@ -498,9 +492,9 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
             theta.ax <- theta.soft[1]
           } else {
             if(show.trait){
-              theta.ax <-theta.soft[1] + tree.open.angle*(1/3) * pi/180
+              theta.ax <-theta[1] + (360-real.open)*(1/3) * pi/180
             } else {
-              theta.ax <-theta.soft[1] + tree.open.angle*(1/2) * pi/180
+              theta.ax <-theta[1] + (360-real.open)*(1/2) * pi/180
             }
           }
           cos.tax <- cos(pi/2 - theta.ax)
@@ -545,35 +539,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         }
       }
       
-      # TRAITS LABELS
-      if(show.trait){
-        if(tree.open.crown){
-          theta.trait <- theta.soft[length(theta.soft)]
-        } else {
-          if(show.bar.axis & (plot.type == "barplot" | plot.type == "dotplot")){
-            theta.trait <-theta.soft[length(theta.soft)] + tree.open.angle*(2/3) * pi/180
-          } else {
-            theta.trait <-theta.soft[length(theta.soft)] + tree.open.angle*(1/2) * pi/180
-          }
-        }
-        cos.ttrait <- cos(pi/2 - theta.trait)
-        sin.ttrait <- sin(pi/2 - theta.trait)
-        # Frame for Traits Labels
-        segments(x0 = length.ring1 * cos.ttrait,
-                 x1 = length.ring2 * cos.ttrait,
-                 y0 = length.ring1 * sin.ttrait,
-                 y1 = length.ring2 * sin.ttrait,
-                 lwd = 20, col = trait.bg.col[i])
-        
-        # Traits Labels
-        text(x = (length.ring1 + length.ring2)/2 * cos.ttrait, 
-             y = (length.ring1 + length.ring2)/2 * sin.ttrait,
-             labels = trait.labels[i],
-             col = trait.col[i], cex = trait.cex[i],
-             font = trait.font[i],
-             srt = ifelse(theta.trait > 0 | theta.trait < - pi, 
-                          (pi/2 - theta.trait) * 180 /pi, (-pi/2 - theta.trait) * 180 /pi))
-      }
+      
       
       # Draw Values
       if(plot.type == "barplot"){
@@ -604,11 +570,11 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         theta.grid2 <- theta - pi/2 + (theta[1] + theta[2])/2
         
         for(k in 1:length(theta)){
-          xx1 <- length.ring1 * cos(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
-          xx2 <- length.ring2 * cos(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
-          yy1 <- length.ring1 * sin(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
-          yy2 <- length.ring2 * sin(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
-          polygon(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = grid.colors[k, i] , border = NA)
+          tile.x1 <- length.ring1 * cos(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          tile.x2 <- length.ring2 * cos(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          tile.y1 <- length.ring1 * sin(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          tile.y2 <- length.ring2 * sin(pi/2 - seq(theta.grid1[k], theta.grid2[k], length.out = 25))
+          polygon(c(tile.x1, rev(tile.x2)), c(tile.y1, rev(tile.y2)), col = grid.colors[k, i] , border = NA)
         }
         if(grid.horizontal){
           segments(x0 = length.ring1 * cos(pi/2 - theta.grid1),
@@ -654,30 +620,64 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         }
         options(warn = 1)
       }
+      
+      # Draw Box
+      if(show.box){
+        if(tree.open.crown){
+          lines(c(xx1, rev(xx2)), c(yy1, rev(yy2)), col = 1)
+        } else {
+          lines(xx1, yy1, col = 1)
+          lines(xx2, yy2, col = 1)          
+        } 
+      }
     
+      # TRAITS LABELS
+      if(show.trait){
+        if(tree.open.crown){
+          theta.trait <- theta.soft[length(theta.soft)]
+        } else {
+          if(show.bar.axis & (plot.type == "barplot" | plot.type == "dotplot")){
+            theta.trait <-theta[length(theta)] - (360-real.open)*(1/3) * pi/180
+          } else {
+            theta.trait <-theta[length(theta)] - (360-real.open)*(1/2) * pi/180
+          }
+        }
+        cos.ttrait <- cos(pi/2 - theta.trait)
+        sin.ttrait <- sin(pi/2 - theta.trait)
+        # Frame for Traits Labels
+        segments(x0 = length.ring1 * cos.ttrait,
+                 x1 = length.ring2 * cos.ttrait,
+                 y0 = length.ring1 * sin.ttrait,
+                 y1 = length.ring2 * sin.ttrait,
+                 lwd = 20, col = trait.bg.col[i])
+        
+        # Traits Labels
+        text(x = (length.ring1 + length.ring2)/2 * cos.ttrait, 
+             y = (length.ring1 + length.ring2)/2 * sin.ttrait,
+             labels = trait.labels[i],
+             col = trait.col[i], cex = trait.cex[i],
+             font = trait.font[i],
+             srt = ifelse(theta.trait > 0 | theta.trait < -pi, 
+                          (pi/2 - theta.trait) * 180 /pi, (-pi/2 - theta.trait) * 180 /pi))
+      }
+      
     }
     
+    # TIPS
     if(show.tip){
-      
       length.tipsline <- (length.phylo+length.intergr*(n.traits+1)+length.gr*(n.traits))
       tip.xlim <- c(-1, 1)
       if(tip.adj < 0.5) tip.xlim[1] <- -tip.adj / 0.5
       if(tip.adj > 0.5) tip.xlim[2] <- -2 * tip.adj + 2
       
       for(i in 1:n.tips){
-        if(theta[i] > 0){
-          text(x = length.tipsline * cos.t[i],
-               y = length.tipsline * sin.t[i],
-               labels = tip.labels[i],
-               adj = 0, col = tip.col[i], cex = tip.cex[i], font = tip.font[i],
-               srt = (pi/2-theta[i]) * 180 /pi)
-        } else {
-          text(x = length.tipsline * cos.t[i],
-               y = length.tipsline * sin.t[i],
-               labels = tip.labels[i],
-               adj = 1, col = tip.col[i], cex = tip.cex[i], font = tip.font[i],
-               srt = (-pi/2-theta[i]) * 180 /pi)
-        }
+        text(x = length.tipsline * cos.t[i],
+             y = length.tipsline * sin.t[i],
+             labels = tip.labels[i],
+             adj = ifelse(theta[i] > 0 | theta[i] < -pi, 0, 1), 
+             col = tip.col[i], cex = tip.cex[i], font = tip.font[i],
+             srt = ifelse(theta[i] > 0 | theta[i] < -pi, 
+                         (pi/2 - theta[i]) * 180 /pi, (-pi/2 - theta[i]) * 180 /pi))
       }
     }
     
@@ -769,6 +769,9 @@ barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale
 
 
 #'@rdname plotp4d
+dotplot <- function(...){
+  UseMethod("dotplot")
+}
 dotplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
                             grid.horizontal = TRUE, grid.vertical = FALSE, ...){
   
