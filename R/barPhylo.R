@@ -408,7 +408,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                no.margin = TRUE, open.angle = tree.open.angle, rotate.tree = 0, ...)
     lp <- get("last_plot.phylo", envir = .PlotPhyloEnv)
         
-    length.phylo <- sqrt(lp$xx[1]^2 + lp$yy[1]^2)
+    length.phylo <- max(sqrt(lp$xx^2 + lp$yy^2))
     if(show.tip){
       length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / (n.traits+1)
     } else {
