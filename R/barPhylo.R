@@ -14,6 +14,7 @@
 #' @param plot.type a character string specifying the type of plot for traits data.
 #' Can be \code{"barplot"}, \code{"dotplot"} or \code{"gridplot"}.
 #' 
+#' @param tree.ladderize a logical indicating whether the tree should be (right) ladderized.
 #' @param tree.type a character string specifying the type of phylogeny to be drawn.
 #' Can be \code{"phylogram"}, \code{"cladogram"} or \code{fan}.
 #' @param tree.ratio a numeric value in [0, 1] giving the proportion of width of the figure for the tree.
@@ -86,7 +87,7 @@
 #'  
 #' @export
 multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, plot.type = "barplot",
-                     tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+                     tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
                      tree.open.angle = 0, tree.open.crown = TRUE,
                      show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
                      bar.xlim = NULL, bar.lwd = 10, bar.col = "grey35", show.bar.axis = TRUE,
@@ -100,6 +101,9 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                       
   p4 <- extractTree(p4d)
   phy <- as(p4, "phylo")
+  if(tree.ladderize){
+    phy <- ladderize(phy)
+  }
   new.order <- phy$edge[, 2][!phy$edge[, 2] %in% phy$edge[, 1]]
   tips <- phy$tip.label[new.order]
   n.tips <- length(tips)
