@@ -1,6 +1,6 @@
 
 
-#' Bar Plots of Traits Values along a Phylogeny
+#' Plots of Traits Values along a Phylogeny
 #'
 #' This function computes Local Indicator of Phylogenetic Association (local Moran's I) for each tip of the tree.
 #' Tests are based on permutations.
@@ -83,7 +83,7 @@
 #' @param grid.horizontal a logical incating whether horizontal lines of the grid should be drawn.
 #' @param grid.col a vector of R color(s) to use for the lines of the grid.
 #' @param grid.lty the lines type of the grid. Possibly a vector.
-#' @param further arguments to be passed to \code{plot.phylo}.
+#' @param ... further arguments to be passed to \code{plot.phylo}.
 #'  
 #' @export
 multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, plot.type = "barplot",
@@ -695,7 +695,9 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
 
 #' Focus on sub parts of a plot
 #'
-#' These functions can be used after barplot.phylo4d to focus on
+#' These functions can be used after \code{barplot.phylo4d}, \code{dotplot.phylo4d}
+#' and \code{gridplot.phylo4d} when
+#' \code{tree.type} is \code{"phylogram"} or \code{"cladogram"} to focus on
 #' the different part of the plot and add graphical elements.
 #' 
 #' @param x the trait to focus on.
@@ -762,60 +764,93 @@ focusStop <- function(){
   par(mar = lp$par.mar0)
 }
 
-#' Plot p4d Object
-#'@export
-#'@rdname plotp4d
-barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, ...){
+
+
+
+#' Barplot of Traits Values along a Phylogeny
+#' 
+#' @inheritParams multiplot.phylo4d
+#' @export
+barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, 
+                            tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+                            tree.open.angle = 0, tree.open.crown = TRUE,
+                            show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
+                            bar.xlim = NULL, bar.lwd = 10, bar.col = "grey35", show.bar.axis = TRUE,
+                            show.trait = TRUE, trait.labels = NULL, trait.col = "black", trait.cex = 1, trait.font = 1,
+                            trait.bg.col = "grey90", error.bar.sup = NULL, error.bar.inf = NULL, error.bar.col = 1,
+                            show.box = FALSE, grid.vertical = TRUE, grid.horizontal = FALSE, grid.col = "grey25",
+                            grid.lty = "dashed", ...){
   
-  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "barplot", ...)
+  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "barplot",
+                    tree.ladderize = tree.ladderize, tree.type = tree.type, tree.ratio = tree.ratio, tree.xlim = tree.xlim,
+                    tree.open.angle = tree.open.angle, tree.open.crown = tree.open.crown,
+                    show.tip = show.tip, tip.labels = tip.labels, tip.col = tip.col, tip.cex = tip.cex, tip.font = tip.font, tip.adj = tip.adj,
+                    bar.xlim = bar.xlim, bar.lwd = bar.lwd, bar.col = bar.col, show.bar.axis = show.bar.axis,
+                    show.trait = show.trait, trait.labels = trait.labels, trait.col = trait.col, trait.cex = trait.cex, trait.font = trait.font,
+                    trait.bg.col = trait.bg.col, error.bar.sup = error.bar.sup, error.bar.inf = error.bar.inf, error.bar.col = error.bar.col,
+                    show.box = show.box, grid.vertical = grid.vertical, grid.horizontal = grid.horizontal, grid.col = grid.col,
+                    grid.lty = grid.lty, ...)
   
 }
+barplot <- function(...){
+  UseMethod("barplot")
+}
 
-
-#'@rdname plotp4d
+#' Dotplot of Traits Values along a Phylogeny
+#' 
+#' @inheritParams multiplot.phylo4d
+#' @export
+dotplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
+                            tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+                            tree.open.angle = 0, tree.open.crown = TRUE,
+                            show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
+                            bar.xlim = NULL, show.bar.axis = TRUE,
+                            dot.col = "black", dot.pch = 20, dot.cex = 2,
+                            show.trait = TRUE, trait.labels = NULL, trait.col = "black", trait.cex = 1, trait.font = 1,
+                            trait.bg.col = "grey90", error.bar.sup = NULL, error.bar.inf = NULL, error.bar.col = 1,
+                            show.box = FALSE, grid.vertical = FALSE, grid.horizontal = TRUE, grid.col = "grey25",
+                            grid.lty = "dashed", ...){
+  
+  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "dotplot",
+                    tree.ladderize = tree.ladderize, tree.type = tree.type, tree.ratio = tree.ratio, tree.xlim = tree.xlim,
+                    tree.open.angle = tree.open.angle, tree.open.crown = tree.open.crown,
+                    show.tip = show.tip, tip.labels = tip.labels, tip.col = tip.col, tip.cex = tip.cex, tip.font = tip.font, tip.adj = tip.adj,
+                    bar.xlim = bar.xlim, show.bar.axis = show.bar.axis,
+                    dot.col = dot.col, dot.pch = dot.pch, dot.cex = dot.cex,
+                    show.trait = show.trait, trait.labels = trait.labels, trait.col = trait.col, trait.cex = trait.cex, trait.font = trait.font,
+                    trait.bg.col = trait.bg.col, error.bar.sup = error.bar.sup, error.bar.inf = error.bar.inf, error.bar.col = error.bar.col,
+                    show.box = show.box, grid.vertical = grid.vertical, grid.horizontal = grid.horizontal, grid.col = grid.col,
+                    grid.lty = grid.lty, ...)
+  
+}
 dotplot <- function(...){
   UseMethod("dotplot")
 }
-dotplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
-                            grid.horizontal = TRUE, grid.vertical = FALSE, ...){
+
+#' Gridplot of Traits Values along a Phylogeny
+#' @inheritParams multiplot.phylo4d
+#' @export
+gridplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
+                             tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+                             tree.open.angle = 0, tree.open.crown = TRUE,
+                             show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
+                             cell.col = white2red(100), show.color.scale = TRUE,
+                             show.trait = TRUE, trait.labels = NULL, trait.col = "black", trait.cex = 0.7, trait.font = 1,
+                             trait.bg.col = "grey90",
+                             show.box = FALSE, grid.vertical = FALSE, grid.horizontal = FALSE, grid.col = "grey25",
+                             grid.lty = "dashed", ...){
   
-  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "dotplot",
-                    grid.horizontal = grid.horizontal, grid.vertical = grid.vertical, ...)
+  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "gridplot",
+                    tree.ladderize = tree.ladderize, tree.type = tree.type, tree.ratio = tree.ratio, tree.xlim = tree.xlim,
+                    tree.open.angle = tree.open.angle, tree.open.crown = tree.open.crown,
+                    show.tip = show.tip, tip.labels = tip.labels, tip.col = tip.col, tip.cex = tip.cex, tip.font = tip.font, tip.adj = tip.adj,
+                    cell.col = cell.col, show.color.scale = show.color.scale,
+                    show.trait = show.trait, trait.labels = trait.labels, trait.col = trait.col, trait.cex = trait.cex, trait.font = trait.font,
+                    trait.bg.col = trait.bg.col,
+                    show.box = show.box, grid.vertical = grid.vertical, grid.horizontal = grid.horizontal, grid.col = grid.col,
+                    grid.lty = grid.lty, ...)
   
 }
-
-
-#'@rdname plotp4d
 gridplot <- function(...){
   UseMethod("gridplot")
 }
-gridplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
-                     grid.vertical = FALSE, trait.cex = 0.7, ...){
-  
-  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "gridplot",
-                    trait.cex = trait.cex, grid.vertical = grid.vertical, ...)
-  
-}
-
-
-#    barplot(p4d, c("random","bm"), show.tip=T, tip.col=c(2,1), tip.cex=0.8, tip.font=1, tip.adj=0.5,
-#   trait.col=c(2,3), trait.cex=0.8, trait.font=2, trait.bg.col="grey95" , error.bar.inf=mat.e, error.bar.sup=mat.e)
-
-#    barplot(p4d, bar.col=matrix(c(rainbow(19), terrain.colors(19), heat.colors(19))))
-
-#barplot(p4d, error.bar.inf=mat.e)
-
-# mat.e <- matrix(abs(rnorm(19*3, 0, 0.5)), ncol=3, dimnames=list(tipLabels(p4d), names(tdata(p4d))))
-
-# barplot(p4d, trait.bg.col = c("#F6CED8", "#CED8F6", "#CEF6CE"), bar.col = mat.col, tip.col=tip.col,
-# grid.col=1:3, edge.width=2, lend=3, show.bar.axis=T, grid.horizontal=T, scale=F)
-# focusTraits("random")
-# points(0, 13, col =2, pch=20, cex=4)
-# focusTips()
-# points(0, 2, col= 3, cex= 3)
-# abline(v=0.5, col=4)
-# focusTree()
-# points(2,3)
-# nodelabels()
-# focusStop()
-# plot(1)
