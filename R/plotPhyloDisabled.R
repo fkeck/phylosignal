@@ -1,5 +1,4 @@
-#' @export
-plotPhyloDisabled <- function (x, type = "phylogram", use.edge.length = TRUE, node.pos = NULL, 
+.plotPhyloDisabled <- function (x, type = "phylogram", use.edge.length = TRUE, node.pos = NULL, 
                                show.tip.label = TRUE, show.node.label = FALSE, edge.color = "black", 
                                edge.width = 1, edge.lty = 1, font = 3, cex = par("cex"), 
                                adj = NULL, srt = 0, no.margin = FALSE, root.edge = FALSE, 
@@ -15,18 +14,7 @@ plotPhyloDisabled <- function (x, type = "phylogram", use.edge.length = TRUE, no
   }
   if (any(tabulate(x$edge[, 1]) == 1)) 
     stop("there are single (non-splitting) nodes in your tree; you may need to use collapse.singles()")
-  .nodeHeight <- function(Ntip, Nnode, edge, Nedge, yy) .C(node_height, 
-                                                           as.integer(Ntip), as.integer(Nnode), as.integer(edge[, 
-                                                                                                                1]), as.integer(edge[, 2]), as.integer(Nedge), as.double(yy))[[6]]
-  .nodeDepth <- function(Ntip, Nnode, edge, Nedge, node.depth) .C(node_depth, 
-                                                                  as.integer(Ntip), as.integer(Nnode), as.integer(edge[, 
-                                                                                                                       1]), as.integer(edge[, 2]), as.integer(Nedge), double(Ntip + 
-                                                                                                                                                                               Nnode), as.integer(node.depth))[[6]]
-  .nodeDepthEdgelength <- function(Ntip, Nnode, edge, Nedge, 
-                                   edge.length) .C(node_depth_edgelength, as.integer(Ntip), 
-                                                   as.integer(Nnode), as.integer(edge[, 1]), as.integer(edge[, 
-                                                                                                             2]), as.integer(Nedge), as.double(edge.length), double(Ntip + 
-                                                                                                                                                                      Nnode))[[7]]
+    
   Nedge <- dim(x$edge)[1]
   Nnode <- x$Nnode
   if (any(x$edge < 1) || any(x$edge > Ntip + Nnode)) 
@@ -79,24 +67,18 @@ plotPhyloDisabled <- function (x, type = "phylogram", use.edge.length = TRUE, no
         2
     else 1
     if (node.pos == 1) 
-      yy <- .nodeHeight(Ntip, Nnode, z$edge, Nedge, yy)
+      yy <- node.height(x, clado.style = FALSE)
     else {
-      ans <- .C(node_height_clado, as.integer(Ntip), as.integer(Nnode), 
-                as.integer(z$edge[, 1]), as.integer(z$edge[, 
-                                                           2]), as.integer(Nedge), double(Ntip + Nnode), 
-                as.double(yy))
-      xx <- ans[[6]] - 1
-      yy <- ans[[7]]
+      xx <- node.depth(x) - 1
+      yy <- node.height(x, clado.style = TRUE)
     }
     if (!use.edge.length) {
       if (node.pos != 2) 
-        xx <- .nodeDepth(Ntip, Nnode, z$edge, Nedge, 
-                         node.depth) - 1
+        xx <- node.depth(x) - 1
       xx <- max(xx) - xx
     }
     else {
-      xx <- .nodeDepthEdgelength(Ntip, Nnode, z$edge, Nedge, 
-                                 z$edge.length)
+      xx <- node.depth.edgelength(x)
     }
   }
   else {
@@ -111,31 +93,28 @@ plotPhyloDisabled <- function (x, type = "phylogram", use.edge.length = TRUE, no
       theta <- c(theta, numeric(Nnode))
     }
     switch(type, fan = {
-      theta <- .nodeHeight(Ntip, Nnode, z$edge, Nedge, 
-                           theta)
+      theta <- node.height(x)
       if (use.edge.length) {
-        r <- .nodeDepthEdgelength(Ntip, Nnode, z$edge, 
-                                  Nedge, z$edge.length)
+        r <- node.depth.edgelength(x)
       } else {
-        r <- .nodeDepth(Ntip, Nnode, z$edge, Nedge, node.depth)
+        r <- node.depth(x)
         r <- 1/r
       }
       theta <- theta + rotate.tree
       xx <- r * cos(theta)
       yy <- r * sin(theta)
     }, unrooted = {
-      nb.sp <- .nodeDepth(Ntip, Nnode, z$edge, Nedge, node.depth)
+      nb.sp <- node.depth(x)
       XY <- if (use.edge.length) unrooted.xy(Ntip, Nnode, 
                                              z$edge, z$edge.length, nb.sp, rotate.tree) else unrooted.xy(Ntip, 
                                                                                                          Nnode, z$edge, rep(1, Nedge), nb.sp, rotate.tree)
       xx <- XY$M[, 1] - min(XY$M[, 1])
       yy <- XY$M[, 2] - min(XY$M[, 2])
     }, radial = {
-      r <- .nodeDepth(Ntip, Nnode, z$edge, Nedge, node.depth)
+      r <- node.depth(x)
       r[r == 1] <- 0
       r <- 1 - r/Ntip
-      theta <- .nodeHeight(Ntip, Nnode, z$edge, Nedge, 
-                           theta) + rotate.tree
+      theta <- node.height(x) + rotate.tree
       xx <- r * cos(theta)
       yy <- r * sin(theta)
     })
