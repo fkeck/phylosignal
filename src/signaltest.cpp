@@ -6,8 +6,11 @@ using namespace Rcpp;
 const double pi = 3.141592653589793;
 
 
-
-// moranTest computes permutation test for Moran's I
+//' Computes permutation test for Moran's I
+//' 
+//' @param xr a vector of data
+//' @param Wr a weighting matrix
+//' @param reps the number of permutations
 // [[Rcpp::export]]
 List moranTest(NumericVector xr, NumericMatrix Wr, unsigned int reps){
   
@@ -43,8 +46,11 @@ List moranTest(NumericVector xr, NumericMatrix Wr, unsigned int reps){
 
 
 
-
-// kTest computes permutation test for Blomberg's K
+//' Computes permutation test for Blomberg's K
+//' 
+//' @param xr a vector of data
+//' @param vcvr phylogenetic variance-covariance matrix
+//' @param reps the number of permutations
 // [[Rcpp::export]]
 List kTest(NumericVector xr, NumericMatrix vcvr, unsigned int reps){
   
@@ -86,7 +92,11 @@ List kTest(NumericVector xr, NumericMatrix vcvr, unsigned int reps){
 
 
 
-// kStarTest computes permutation test for Blomberg's K*
+//' Computes permutation test for Blomberg's K Star
+//' 
+//' @param xr a vector of data
+//' @param vcvr phylogenetic variance-covariance matrix
+//' @param reps the number of permutations
 // [[Rcpp::export]]
 List kStarTest(NumericVector xr, NumericMatrix vcvr, unsigned int reps){
   
@@ -134,8 +144,14 @@ List kStarTest(NumericVector xr, NumericMatrix vcvr, unsigned int reps){
 }
 
 
-// pagelLogLik computes log likelihood for data and a given value of Pagel's Lambda
-// Adapted from Liam Revell's R function 'phylosig' {phytools}
+
+//' Computes log-likelihood for data and a given value of Pagel's Lambda
+//' 
+//' @param lambda the value of Pagel's Lambda
+//' @param xr a vector of data
+//' @param vcvr phylogenetic variance-covariance matrix
+//' 
+//' @author Adapted from Liam Revell's R function 'phylosig' {phytools}.
 // [[Rcpp::export]]
 double pagelLogLik(double lambda, NumericVector xr, NumericMatrix vcvr){
   
@@ -158,3 +174,36 @@ double pagelLogLik(double lambda, NumericVector xr, NumericMatrix vcvr){
 }
 
 
+//' Mantel statistic
+//' 
+//' @param xr a matrix of traits.
+//' @param Wr a matrix of weights.
+// [[Rcpp::export]]
+double mantelStat(NumericMatrix xr, NumericMatrix Wr){
+  
+  double ntip = xr.nrow();
+  double nvar = xr.ncol();
+  arma::mat W(Wr.begin(), ntip, ntip, false);
+  arma::mat x(xr.begin(), ntip, nvar, false);
+  
+  arma::mat xcor = arma::cor(arma::trans(x));
+  
+  double trisize = ((ntip * ntip) - ntip) / 2;
+  int idx = 0;
+  arma::colvec triX(trisize);
+  arma::colvec triW(trisize);
+  
+  for(unsigned int i = 0 ; i < ntip ; i++){
+    for(unsigned int j = 0 ; j < ntip ; j++){
+      if(i > j){
+        triX(idx) = xcor(i, j);
+        triW(idx) = W(i, j);
+        idx = idx + 1;
+      }
+    }
+  }
+  triX = triX - arma::mean(triX);
+  double res = arma::accu(triX % triW) / arma::accu(triW);
+  
+  return res;
+}

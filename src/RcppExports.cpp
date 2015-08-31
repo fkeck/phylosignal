@@ -10,67 +10,63 @@ using namespace Rcpp;
 List moranTest(NumericVector xr, NumericMatrix Wr, unsigned int reps);
 RcppExport SEXP phylosignal_moranTest(SEXP xrSEXP, SEXP WrSEXP, SEXP repsSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type Wr(WrSEXP );
-        Rcpp::traits::input_parameter< unsigned int >::type reps(repsSEXP );
-        List __result = moranTest(xr, Wr, reps);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type Wr(WrSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type reps(repsSEXP);
+    __result = Rcpp::wrap(moranTest(xr, Wr, reps));
+    return __result;
 END_RCPP
 }
 // kTest
 List kTest(NumericVector xr, NumericMatrix vcvr, unsigned int reps);
 RcppExport SEXP phylosignal_kTest(SEXP xrSEXP, SEXP vcvrSEXP, SEXP repsSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type vcvr(vcvrSEXP );
-        Rcpp::traits::input_parameter< unsigned int >::type reps(repsSEXP );
-        List __result = kTest(xr, vcvr, reps);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type vcvr(vcvrSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type reps(repsSEXP);
+    __result = Rcpp::wrap(kTest(xr, vcvr, reps));
+    return __result;
 END_RCPP
 }
 // kStarTest
 List kStarTest(NumericVector xr, NumericMatrix vcvr, unsigned int reps);
 RcppExport SEXP phylosignal_kStarTest(SEXP xrSEXP, SEXP vcvrSEXP, SEXP repsSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type vcvr(vcvrSEXP );
-        Rcpp::traits::input_parameter< unsigned int >::type reps(repsSEXP );
-        List __result = kStarTest(xr, vcvr, reps);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type vcvr(vcvrSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type reps(repsSEXP);
+    __result = Rcpp::wrap(kStarTest(xr, vcvr, reps));
+    return __result;
 END_RCPP
 }
 // pagelLogLik
 double pagelLogLik(double lambda, NumericVector xr, NumericMatrix vcvr);
 RcppExport SEXP phylosignal_pagelLogLik(SEXP lambdaSEXP, SEXP xrSEXP, SEXP vcvrSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP );
-        Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type vcvr(vcvrSEXP );
-        double __result = pagelLogLik(lambda, xr, vcvr);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type vcvr(vcvrSEXP);
+    __result = Rcpp::wrap(pagelLogLik(lambda, xr, vcvr));
+    return __result;
+END_RCPP
+}
+// mantelStat
+double mantelStat(NumericMatrix xr, NumericMatrix Wr);
+RcppExport SEXP phylosignal_mantelStat(SEXP xrSEXP, SEXP WrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type xr(xrSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type Wr(WrSEXP);
+    __result = Rcpp::wrap(mantelStat(xr, Wr));
+    return __result;
 END_RCPP
 }
