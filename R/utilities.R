@@ -294,6 +294,7 @@ evenColors <- function(n){
 #' This is a phylogenetic distance.
 #' @param sigma a numeric value giving the standard deviation
 #' of the distribution if \code{method} is \code{lag-norm}.
+#' @param dmax the maximum phylogenetic distance to use to delineate clades.
 #' @param alpha a numeric value giving the exponent to use if \code{method} is \code{inverse}.
 #' @param beta a numeric value giving the factor to use if \code{method} is \code{exponential}.
 #' 
