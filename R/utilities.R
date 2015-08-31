@@ -68,7 +68,7 @@ subsetPhyloSimSignal <- function(x, methods, traits){
 #' @param node the ID of the node.
 #' 
 #' @return A vector of node numbers.
-directDescents <- function(phy, node, as.phylo = FALSE){
+directDescents <- function(phy, node){
   res <- phy$edge[which(phy$edge[, 1] == node), 2]
   return(res)
 }
@@ -148,8 +148,13 @@ matchTipsAndTraits <- function(x, p4d = NULL, p4d.tips = NULL, p4d.traits = NULL
 }
 
 
-
-layouterize <- function(n.traits, show.tip, direction = "rightwards"){
+#' Set layout for plots
+#' 
+#' @param n.traits the number of traits in the layout
+#' @param show.tip a logical indicating whether tip names are included in the layout
+#' 
+#' @rdname layouterize
+.layouterize <- function(n.traits, show.tip){
   if(show.tip){
     res <- matrix(c(n.traits + 2, 1:(n.traits + 1)), nrow = 1)
   } else {
@@ -158,7 +163,14 @@ layouterize <- function(n.traits, show.tip, direction = "rightwards"){
   return(res)
 }
 
-layouterizeRatio <- function(tree.ratio, n.traits, show.tip, direction = "rightwards"){
+#' Set layout for plots
+#' 
+#' @param tree.ratio the ratio of phylogenetic tree included in the layout
+#' @param n.traits the number of traits in the layout
+#' @param show.tip a logical indicating whether tip names are included in the layout
+#' 
+#' @rdname layouterizeRatio
+.layouterizeRatio <- function(tree.ratio, n.traits, show.tip){
   if(!is.null(tree.ratio)){
     if(show.tip){
       res <- c(tree.ratio, rep((1 - tree.ratio) / (n.traits + 1), n.traits + 1))
@@ -175,7 +187,11 @@ layouterizeRatio <- function(tree.ratio, n.traits, show.tip, direction = "rightw
   return(res)
 }
 
-
+#' Color Palette
+#' 
+#' A simple color palette for gridplots.
+#' 
+#' @param n the number of colors to be in the palette.
 white2red <- colorRampPalette(c("white", "red"))
 
 
@@ -187,12 +203,14 @@ white2red <- colorRampPalette(c("white", "red"))
 #' @param x a vector or a matrix to order.
 #' @param n.tips number of tips.
 #' @param n.traits number of traits
-#' @param a numeric vector giving the new order.
+#' @param new.order a numeric vector giving the new order.
 #' @param tips a character vector giving the tips labels (with the new order)
+#' @param default the default value
 #' 
 #' @return An ordered vector or matrix.
 #' An error if problem of consistency.
-orderGrArg <- function(x, n.tips, n.traits, new.order, tips, default){
+#' @rdname orderGrArg
+.orderGrArg <- function(x, n.tips, n.traits, new.order, tips, default){
   x.dep <- deparse(substitute(x))
   if(is.vector(x)){
     if(is.null(names(x))){
@@ -216,7 +234,7 @@ orderGrArg <- function(x, n.tips, n.traits, new.order, tips, default){
       if(any(tips %in% rownames(x))){
         y <- matrix(default, nrow = nrow(x), ncol = ncol(x))
         rownames(y) <- tips
-        y[rownames(x)] <- x[rownames(x)]
+        y[rownames(x),] <- x[rownames(x),]
         x <- y[tips, ]
       } else {
         stop(paste("Phylogenetic tips do not match with row names of", x.dep))
@@ -229,37 +247,100 @@ orderGrArg <- function(x, n.tips, n.traits, new.order, tips, default){
 
 
 
-#' Simplify categories numbering
-#'
-simpleCat <- function(x){
-  if(!is.null(names(x))){
-    x.names <- names(x)
-  } else {
-    x.names <- NULL
-  }
-  x <- as.factor(x)
-  x <- as.numeric(x)
-  names(x) <- x.names
-  return(x)
-}
+# .simpleCat <- function(x){
+#   if(!is.null(names(x))){
+#     x.names <- names(x)
+#   } else {
+#     x.names <- NULL
+#   }
+#   x <- as.factor(x)
+#   x <- as.numeric(x)
+#   names(x) <- x.names
+#   return(x)
+# }
 
 #' Palette of evenly distributed colors
 #' 
 #' This function generates a vector of n colors evenly distributed in the RGB space.
 #' Usefull to create palettes of distinct colors.
 #' 
-#' @param n the number of colors (≥ 1) to be in the palette.
+#' @param n the number of colors to be in the palette.
 #' 
 #' @return a vector of hexadecimal colors.
-#' 
+#' @export
 evenColors <- function(n){
   rgb.cube <- expand.grid(seq(0, 255, by = 15),
                           seq(0, 255, by = 15),
                           seq(0, 255, by = 15))
   rgb.km <- kmeans(rgb.cube, n)
   res <- mapply(rgb, rgb.km$centers[, 1], rgb.km$centers[, 2], rgb.km$centers[, 3],
-                MoreArgs=list(maxColorValue = 255))
+                MoreArgs = list(maxColorValue = 255))
   return(res)
 }
 
-
+#' Phylogenetic weights matrix
+#' 
+#' This function can be used to compute a phylogenetic weights matrix
+#' with different methods.
+#' 
+#' @param tree a \code{phylo}, \code{phylo4} or \code{phylo4d} object.
+#' @param dist.phylo a character string specifying the method used to compute phylogenetic distances.
+#' Available distances are "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
+#' See Details.
+#' @param method a method to compute phylogenetic weights from phylogenetic distances.
+#' Available methods are "\code{lag-norm}", "\code{clade}", "\code{inverse}" and "\code{exponential}".
+#' See Details.
+#' @param mu a numeric value giving the mean of the distribution if \code{method} is \code{lag-norm}.
+#' This is a phylogenetic distance.
+#' @param sigma a numeric value giving the standard deviation
+#' of the distribution if \code{method} is \code{lag-norm}.
+#' @param alpha a numeric value giving the exponent to use if \code{method} is \code{inverse}.
+#' @param beta a numeric value giving the factor to use if \code{method} is \code{exponential}.
+#' 
+#' @details
+#' Method "\code{inverse}": \deqn{\frac{1}{d^{\alpha}}}{w = 1/d^alpha}
+#' 
+#' The phylogenetic distance matrix is computed internally
+#' using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
+#' See \code{\link[adephylo]{distTips}} for details about the methods.
+#' 
+#' @return A square matrix of phylogenetic weights whose sums of rows is 1.
+#' 
+#' @seealso \code{\link[adephylo]{proxTips}} in \pkg{adephylo}.
+#' @export
+phyloWeights <- function(tree, dist.phylo = "patristic", method = "lag-norm",
+                         mu = 0, sigma = 5, dmax = 10, alpha = 1, beta = 1){
+  if (inherits(tree, "phylo4")){
+    tree <- as(tree, "phylo")
+  }
+  if (!inherits(tree, "phylo")){
+    stop("x has to be a phylo, phylo4 or phylo4d object")
+  }
+  dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
+  method <- match.arg(method, c("lag-norm", "clade", "inverse", "exponential"))
+  
+  d <- distTips(tree, method = dist.phylo)
+  d <- as.matrix(d)
+  
+  if(method == "lag-norm"){
+    w <- dnorm(d, mean = mu, sd = sigma)
+  }
+  
+  if(method == "clade"){
+    w <- ifelse(d < dmax, 1, 0)
+    w[rowSums(w) == 1, ] <- NA
+  }
+  
+  if(method == "inverse"){
+    w <- 1 / (d ^ alpha)
+  }
+  
+  if(method == "exponential"){
+    w <- exp(-beta * d)
+  }
+  
+  diag(w) <- 0
+  w <- prop.table(w, 1)
+  return(w)
+}
+  
