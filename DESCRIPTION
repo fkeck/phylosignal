@@ -12,7 +12,7 @@ Imports:
     RcppArmadillo (>= 0.4.400.0),
     adephylo,
     igraph,
-    ncf,
     ape,
-    phylobase
+    phylobase,
+    boot
 LinkingTo: Rcpp, RcppArmadillo
