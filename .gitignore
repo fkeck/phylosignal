@@ -5,10 +5,4 @@ phylosignal.Rproj
 src/*.o
 src/*.so
 src/*.dll
-todo.md
-todo.html
-tests.R
-demo/
-autocorTests.R
-R_deprecated
-phylosignal_functional_design.graphml
+.ignore/
