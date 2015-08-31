@@ -4,20 +4,33 @@
 #'
 #' This function extracts clusters of species based on traits values and phylogenetic proximities.
 #' 
-#' @param p4d a phylo4d object.
-#' @param trait the trait(s) in the phylo4d object to use for clustering.
-#' Can be a character vector giving the name of the trait(s) or numbers giving the column index
-#' in the table of the data slot of the p4d object.
+#' @param p4d a \code{phylo4d} object.
+#' @param trait the traits in the \code{phylo4d} object to use for clustering.
+#' Can be a character vector giving the name of the traits or numbers giving the column index
+#' in the table of the data slot of the \code{phylo4d} object.
 #' @param lim.phylo the maximum phylogenetic distance for edges selection.
-#' @param lim.trait the maximum traits based distance for edges selection.
+#' @param lim.trait the maximum trait-based distance for edges selection.
 #' @param dist.phylo a character string specifying the method used to compute phylogenetic distances.
 #' See Details.
 #' @param dist.trait a character string specifying the method used to compute traits distances.
 #' See Details.
 #' @param select.method a character string specifying the method used to select edges.
-#' @param scale.lim logical (default TRUE) indicating if \code{lim.phylo} and \code{lim.trait} are scaled
-#' (divided by the max value)
-#'
+#' This must be one of "\code{line}", "\code{rectangle}" or "\code{ellipse}".
+#' @param scale.lim logical (default \code{TRUE}) indicating if \code{lim.phylo} and \code{lim.trait} are scaled
+#' (divided by their max value).
+#' 
+#' @details The phylogenetic distance matrix is computed internally
+#' using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
+#' All the methods supported by \code{\link[adephylo]{distTips}} are available:
+#' "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
+#' See \code{\link[adephylo]{distTips}} for details about the methods.
+#' 
+#' The trait-based distance matrix is computed with the \code{\link[stats]{dist}} function.
+#' All the methods supported by \code{\link[stats]{dist}} are available:
+#' "\code{euclidean}","\code{maximum}", "\code{manhattan}",
+#' "\code{canberra}", "\code{binary}" and "\code{minkowski}".
+#' See \code{\link[stats]{dist}} for details about the methods.
+#' 
 #' @return An object of class \code{graphclust}.
 #'
 #' @export
@@ -27,6 +40,7 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
                        scale.lim = TRUE){
   
   select.method <- match.arg(select.method, c("line", "rectangle", "ellipse"))
+  dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
   
   if(is.numeric(trait)){
     trait <- names(tdata(p4d))[trait]
@@ -103,19 +117,21 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
 
 #' Plot phylogenetically constrained  clustering
 #'
-#' This function produces three plots (selectable by which):
+#' This function produces three plots (selectable by \code{which}):
 #' a plot of edges selection based on phylogenetic against trait distances of taxa pairs,
 #' a plot of the graph produced with the selected edges
 #' and a plot of the clustered phylogenetic tree.
 #' 
-#' @param x a graphclust object as produced by graphClust.
+#' @param x a \code{graphclust} object as produced by \code{\link{graphClust}}.
 #' @param which a character vector to select plots.
-#' Must be one or more of \code{"selection"}, \code{"graph"}, \code{"tree"}.
-#' @param logical if TRUE (default), the user is asked before each plot
-#' @param colored logical indicating if plots include colors.
+#' Must be one or more of "\code{selection}", "\code{graph}", "\code{tree}".
+#' @param ask logical if \code{TRUE} (default), the user is asked before each plot.
+#' @param colored logical indicating if plots must include colors.
+#' @param ... further arguments to be passed to or from other methods. They are currently ignored in this function.
 #'
+#' @method plot graphclust
 #' @export
-plot.graphclust <- function(x, which = c("selection", "graph", "tree"), ask = TRUE, colored = TRUE){
+plot.graphclust <- function(x, which = c("selection", "graph", "tree"), ask = TRUE, colored = TRUE, ...){
   if(class(x) != "graphclust"){
     stop("x must be an object of class 'graphclust'")
   }
@@ -172,8 +188,14 @@ plot.graphclust <- function(x, which = c("selection", "graph", "tree"), ask = TR
   par(ask = ask0)
 }
 
+#' #' Print results of phylogenetically constrained  clustering
+#' 
+#' @param x a \code{graphclust} object as produced by \code{\link{graphClust}}.
+#' @param ... further arguments to be passed to or from other methods.
+#' 
+#' @method print graphclust
 #' @export
-print.graphclust <- function(x){
+print.graphclust <- function(x, ...){
   cat("Phylogenetically constrained clustering of", length(x$taxa.inclusion), "taxa\n")
   cat("\t Included trait(s):", paste(x$meta$trait, collapse=", "), "\n")
   cat("\t Phylogenetic distance:", x$meta$dist.phylo, "\n")
