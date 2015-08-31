@@ -1,7 +1,7 @@
 Package: phylosignal
 Type: Package
 Title: Exploring the phylogenetic signal for continuous traits.
-Version: 1.0
+Version: 0.1
 Date: 2014-08-22
 Author: Francois Keck <francois.keck@gmail.com>
 Maintainer: Francois Keck <francois.keck@gmail.com>
