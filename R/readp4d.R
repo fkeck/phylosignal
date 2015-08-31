@@ -26,7 +26,7 @@
 #' 
 #' Tips data are imported from a table formatted file. The different formats allow to use
 #' different separator and decimal characters.
-#' They correspond to the variants of \code{\link[utils]{read.table}}
+#' They correspond to the variants of \code{\link[utils]{read.table}}:
 #' \itemize{
 #'   \item \code{table} use \code{\link[utils]{read.table}} with default settings.
 #'   \item \code{csv} use \code{\link[utils]{read.csv}} with default settings.
@@ -52,7 +52,7 @@ read.p4d <- function(phylo.file, data.file, phylo.format = "newick", data.format
     phy <- read.nexus(file = phylo.file)
   }
 
-  read.fun <- paste("read.", data.format, "(file = \"", data.file, "\", header = TRUE)", sep = "")
+  read.fun <- paste("read.", data.format, "(file = \"", data.file, "\", header = TRUE, row.names = 1)", sep = "")
   dat <- eval(parse(text = read.fun))
   
   p4d <- phylo4d(x = phy, tip.data = dat)
