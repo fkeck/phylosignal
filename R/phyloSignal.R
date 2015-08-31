@@ -23,12 +23,12 @@
 #' and Revell (2012).
 #'
 #' @references
-#' Abouheif E. (1999) A method for testing the assumption of phylogenetic independence in comparative data. Evolutionary Ecology Research 1, 895–909.
-#' Blomberg S.P., Garland Jr T. & Ives A.R. (2003) Testing for phylogenetic signal in comparative data: behavioral traits are more labile. Evolution 57, 717–745.
-#' Gittleman J.L. & Kot M. (1990) Adaptation: Statistics and a null model for estimating phylogenetic effects. Systematic Biology 39, 227–241.
-#' Pagel M. (1999) Inferring the historical patterns of biological evolution. Nature 401, 877–884.
-#' Revell L.J. (2012) phytools: an R package for phylogenetic comparative biology (and other things). Methods in Ecology and Evolution 3, 217–223.
-#' Pavoine S. & Ricotta C. (2013) Testing for Phylogenetic Signal in Biological Traits: The Ubiquity of Cross-Product Statistics. Evolution 67, 828–840.
+#' Abouheif E. (1999) A method for testing the assumption of phylogenetic independence in comparative data. Evolutionary Ecology Research 1, 895-909.
+#' Blomberg S.P., Garland Jr T. & Ives A.R. (2003) Testing for phylogenetic signal in comparative data: behavioral traits are more labile. Evolution 57, 717-745.
+#' Gittleman J.L. & Kot M. (1990) Adaptation: Statistics and a null model for estimating phylogenetic effects. Systematic Biology 39, 227-241.
+#' Pagel M. (1999) Inferring the historical patterns of biological evolution. Nature 401, 877-884.
+#' Revell L.J. (2012) phytools: an R package for phylogenetic comparative biology (and other things). Methods in Ecology and Evolution 3, 217-223.
+#' Pavoine S. & Ricotta C. (2013) Testing for Phylogenetic Signal in Biological Traits: The Ubiquity of Cross-Product Statistics. Evolution 67, 828-840.
 #'
 #'@seealso \code{\link{phyloSimSignal}} .
 #'@rdname phylosignalStats

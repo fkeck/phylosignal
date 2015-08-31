@@ -4,7 +4,7 @@
 \alias{plot.phylocorrelogram}
 \title{Plot a phylogenetic correlogram}
 \usage{
-plot.phylocorrelogram(x, xlab = "Phylogenetic distance",
+\method{plot}{phylocorrelogram}(x, xlab = "Phylogenetic distance",
   ylab = "Correlation", main = "Phylogenetic correlogram", ...)
 }
 \arguments{

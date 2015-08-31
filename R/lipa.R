@@ -32,7 +32,7 @@
 #' If \code{as.p4d} is \code{TRUE}, the function returns a \code{phylo4d} object
 #' with LIPA values as tips associated data.
 #'
-#' @references Anselin L. (1995) Local Indicators of Spatial Association—LISA. Geographical Analysis 27, 93–115.
+#' @references Anselin L. (1995) Local Indicators of Spatial Association-LISA. Geographical Analysis 27, 93-115.
 
 #'
 #' @export

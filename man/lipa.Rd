@@ -47,6 +47,6 @@ Different methods supported by \code{\link[adephylo]{proxTips}} are available:
 See \code{\link[adephylo]{proxTips}} for details about the methods.
 }
 \references{
-Anselin L. (1995) Local Indicators of Spatial Association—LISA. Geographical Analysis 27, 93–115.
+Anselin L. (1995) Local Indicators of Spatial Association-LISA. Geographical Analysis 27, 93-115.
 }
 

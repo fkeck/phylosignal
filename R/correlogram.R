@@ -37,7 +37,7 @@
 #' \code{\link[ape]{correlogram.formula}} in \pkg{ape} for correlograms based on taxonomic levels.
 #' 
 #' @references 
-#' Oden N.L. & Sokal R.R. (1986) Directional Autocorrelation: An Extension of Spatial Correlograms to Two Dimensions. Systematic Zoology 35, 608–617.
+#' Oden N.L. & Sokal R.R. (1986) Directional Autocorrelation: An Extension of Spatial Correlograms to Two Dimensions. Systematic Zoology 35, 608-617.
 #' 
 #' @export
 phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
@@ -103,6 +103,7 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
 #' @param main a main title for the plot
 #' @param ... other graphical parameters passed to the \code{plot} function.
 #' 
+#' @method plot phylocorrelogram
 #' @export
 plot.phylocorrelogram <- function(x, xlab = "Phylogenetic distance", ylab = "Correlation",
                                   main = "Phylogenetic correlogram", ...){

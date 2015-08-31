@@ -24,6 +24,8 @@ This is a phylogenetic distance.}
 \item{sigma}{a numeric value giving the standard deviation
 of the distribution if \code{method} is \code{lag-norm}.}
 
+\item{dmax}{the maximum phylogenetic distance to use to delineate clades.}
+
 \item{alpha}{a numeric value giving the exponent to use if \code{method} is \code{inverse}.}
 
 \item{beta}{a numeric value giving the factor to use if \code{method} is \code{exponential}.}
