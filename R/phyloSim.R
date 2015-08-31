@@ -3,18 +3,19 @@
 #' Simulate the behaviour of phylogenetic signal statistics with a given phylogeny
 #'
 #' This function simulates different phylogenetic signal statistics
-#' for a given phylogenetic tree along a gradient of phylogenetic autocorrelation.
+#' for a given phylogenetic tree along a gradient of Brownian Motion influence.
 #'
-#' @param tree a phylo, phylo4 or phylo4d object (see Details).
+#' @param tree a \code{phylo}, \code{phylo4} or \code{phylo4d} object.
 #' @param methods a character vector giving the methods to compute phylogenetic signal (see Details).
 #' @param nsim a numeric value. Number of simulated traits at each step in the gradient.
 #' @param reps a numeric value. Number of repetitions for the estimation of p.values with randomization.
-#' @param model the model to use for traits simulation (only "BM", default, works).
-#' @param pb a logical. Should a progress bar be printed? (default TRUE).
+#' @param model the model to use for traits simulation (only "\code{BM}", default, is available).
+#' @param pb a logical. Should a progress bar be printed? (default \code{TRUE}).
 #'
-#'@details By default, the \code{methods} argument is set to "all" and all the available methods are used.
+#'@details By default, the \code{methods} argument is set to "\code{all}" and all the available methods are used.
 #'The user can specify which method(s) to use. Possible values are
-#'"\code{I}", "\code{Cmean}", "\code{Lambda}", "\code{K}" and "\code{K.star}".
+#'"\code{I}", "\code{Cmean}", "\code{Lambda}", "\code{K}" and "\code{K.star}",
+#'see \code{\link{phyloSignal}} for further details.
 #'
 #'@return An object of class \code{phylosim}.
 #'
@@ -52,22 +53,27 @@ phyloSim <- function(tree, methods=c("all", "I", "Cmean", "Lambda", "K", "K.star
 
 
 
-#' Plot phylosim object
+#' Plot \code{phylosim} object
 #'
-#' This function plots a phylosim object to visualize the behaviour of
+#' This function plots a \code{phylosim} object to visualize the behaviour of
 #' phylogenetic signal statistics for a given phylogenetic tree
 #'
-#' @param x a phylosim object.
+#' @param x a \code{phylosim} object.
+#' @param what what to represent on the plot.
+#' Can be the statistics used to measure the signal ("\code{stat}") or the p-values ("\code{pval}").
 #' @param stacked.methods a logical. If different methods have been used, should they
-#' be plotted on the same graphic (TRUE) or not (FALSE, default)
-#' @param quantiles a vector of two numeric values giving the minimum and the maximum quantiles to plot.
-#' @param col a vector of colour(s) for the different methods.
-#' @param legend a logical. If stacked methods is set to TRUE,
-#' should a legend be priented to differentiate the different methods?
-#'
+#' be plotted on the same graphic (\code{TRUE}) or not (\code{FALSE}, default).
+#' @param quantiles a vector of two numeric values between 0 and 1
+#' giving the minimum and the maximum quantiles to plot.
+#' Set to \code{NULL} to not plot quantiles.
+#' @param col a vector of colors for the different methods.
+#' @param legend a logical. If \code{stacked.methods} is set to \code{TRUE},
+#' should a legend be printed to differentiate the different methods?
+#' @param ... further arguments to be passed to or from other methods.
 #'
 #'@seealso \code{\link{phyloSim}}.
 #'
+#'@method plot phylosim
 #'@export
 plot.phylosim <- function(x, what=c("stat", "pval"), stacked.methods=FALSE,
                           quantiles=c(0.05, 0.95), col=1:5, legend=TRUE, ...){
@@ -77,13 +83,13 @@ plot.phylosim <- function(x, what=c("stat", "pval"), stacked.methods=FALSE,
     nstat <- dim(sim.stat)[2]
     
     sim.stat.mean <- apply(sim.stat, c(1, 2), mean, na.rm=T)
-    ylim <- c(min(sim.stat.mean), max(sim.stat.mean))
+    ylim <- c(min(sim.stat.mean, na.rm = TRUE), max(sim.stat.mean, na.rm = TRUE))
     xlim <- c(0, 100)
     
     if(!is.null(quantiles)){
-      sim.stat.qmin <- apply(sim.stat, c(1, 2), quantile, probs=min(quantiles), na.rm=T)
-      sim.stat.qmax <- apply(sim.stat, c(1, 2), quantile, probs=max(quantiles), na.rm=T)
-      ylim <- c(min(sim.stat.qmin), max(sim.stat.qmax))
+      sim.stat.qmin <- apply(sim.stat, c(1, 2), quantile, probs=min(quantiles), na.rm = TRUE)
+      sim.stat.qmax <- apply(sim.stat, c(1, 2), quantile, probs=max(quantiles), na.rm = TRUE)
+      ylim <- c(min(sim.stat.qmin, na.rm = TRUE), max(sim.stat.qmax, na.rm = TRUE))
     }
     
     gcol <- rgb(t(col2rgb(col)), alpha=40, maxColorValue=255)
