@@ -1,21 +1,27 @@
 
 
-#' Local Indicator of Phylogenetic Association (Moran's I)
+#' Local Indicator of Phylogenetic Association
 #'
-#' This function computes Local Indicator of Phylogenetic Association (local Moran's I) for each tip of the tree.
+#' This function computes Local Indicator of Phylogenetic Association (local Moran's I) for each tip of a tree.
 #' Tests are based on permutations.
 #' 
-#' @param p4d a phylo4d object (see Details).
-#' @param trait the trait(s) in the p4d object for which to compute LIPA.
-#' Can be a character vector giving the name of the trait(s)
-#' or a single number giving the column in the table of the data slot of the p4d object.
+#' @param p4d a \code{phylo4d} object.
+#' @param trait the traits in the \code{phylo4d} object for which to compute LIPA.
+#' Can be a character vector giving the name of the traits
+#' or numbers giving the column in the table of the data slot of the \code{phylo4d} object.
 #' @param reps a numeric value. Number of repetitions for the estimation of p.values with randomization.
 #' @param alternative a character string specifying the alternative hypothesis for the tests.
-#' Must be one of \code{two-sided} (default), \code{greater} or \code{less}.
+#' Must be one of \code{greater} (default), \code{two-sided} or \code{less}.
 #' @param prox.phylo a character string specifying the method used to compute phylogenetic proximities.
 #' See Details.
-#' @param as.p4d logical. Should the results returned as a phylo4d object?
-
+#' @param as.p4d logical. Should the results returned as a \code{phylo4d} object?
+#' 
+#' @details The phylogenetic proximity matrix is computed internally
+#' using the function \code{\link[adephylo]{proxTips}} from the package \pkg{adephylo}.
+#' Different methods supported by \code{\link[adephylo]{proxTips}} are available:
+#' "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
+#' See \code{\link[adephylo]{proxTips}} for details about the methods.
+#' 
 #' @return If \code{as.p4d} is \code{FALSE} (default), the function returns a list:
 #' \describe{
 #'   \item{lipa}{A matrix of LIPA indices computed for each tip of the tree and each trait.}
@@ -26,9 +32,12 @@
 #' If \code{as.p4d} is \code{TRUE}, the function returns a \code{phylo4d} object
 #' with LIPA values as tips associated data.
 #'
+#' @references Anselin L. (1995) Local Indicators of Spatial Association—LISA. Geographical Analysis 27, 93–115.
+
+#'
 #' @export
 lipa <- function(p4d, trait = names(tdata(p4d)), reps=999,
-                 alternative = "two-sided", prox.phylo = "patristic", as.p4d = FALSE){
+                 alternative = "greater", prox.phylo = "patristic", as.p4d = FALSE){
   
   p4 <- extractTree(p4d)
   phy <- as(p4, "phylo")
@@ -43,7 +52,7 @@ lipa <- function(p4d, trait = names(tdata(p4d)), reps=999,
   if(is.numeric(trait)){
     trait <- names(tdata(p4d))[trait]
   }
-  
+  prox.phylo <- match.arg(prox.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
   W <- proxTips(phy, method = prox.phylo)[new.order, new.order]
   X <- scale(X, scale = FALSE)
   X.lag <- W %*% X
