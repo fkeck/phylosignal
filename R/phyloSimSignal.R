@@ -3,27 +3,27 @@
 #' Phylogenetic signal estimation as a fraction of a Brownian Motion process.
 #'
 #' This function crosses traits data with simulations to estimate the phylogenetic signal as a
-#' fraction of a Brownian Motion process.
+#' fraction of a Brownian Motion process. This is experimental.
 #'
-#' @param p4d a phylo4d object.
-#' @param phylosim a phylosim object.
-#' @param quantiles a vector of two numeric values giving the minimum
+#' @param p4d a \code{phylo4d} object.
+#' @param phylosim a \code{phylosim} object.
+#' @param quantiles a vector of two numeric values between 0 and 1 giving the minimum
 #' and the maximum quantiles to estimate statistics fluctuations.
 #'
-#'@return An object of class \code{phylosimsignal} with a \code{print} and a \code{plot} methods.
+#'@return An object of class \code{phylosimsignal} with a \code{print} and a \code{plot} method.
 #'
 #'@seealso \code{\link{phyloSignal}}, \code{\link{phyloSim}}.
 #'
 #'@export
-phyloSimSignal <- function(p4d, phylosim, quantiles=c(0.05, 0.95)){
+phyloSimSignal <- function(p4d, phylosim, quantiles = c(0.05, 0.95)){
   
-  stat.signal <- phyloSignal(p4d, method="all", reps=999)
+  stat.signal <- phyloSignal(p4d, methods = "all", reps = 999)
   stat.signal$stat <- stat.signal$stat[,phylosim$stat.names]
   stat.signal$pvalue <- stat.signal$pvalue[,phylosim$stat.names]
   
   sim.stat.mean <- apply(phylosim$sim.stat, c(1, 2), mean)
-  sim.stat.qmin <- apply(phylosim$sim.stat, c(1, 2), quantile, probs=min(quantiles))
-  sim.stat.qmax <- apply(phylosim$sim.stat, c(1, 2), quantile, probs=max(quantiles))
+  sim.stat.qmin <- apply(phylosim$sim.stat, c(1, 2), quantile, probs = min(quantiles))
+  sim.stat.qmax <- apply(phylosim$sim.stat, c(1, 2), quantile, probs = max(quantiles))
   
   nstat <- length(phylosim$stat.names)
   ntrait <- nrow(stat.signal$stat)
@@ -47,8 +47,14 @@ phyloSimSignal <- function(p4d, phylosim, quantiles=c(0.05, 0.95)){
 }
 
 
-
-print.phylosimsignal <- function(x){
+#' Print signal estimation as a fraction of a Brownian Motion process.
+#' 
+#' @param x an object of class \code{phylosimsignal}.
+#' @param ... further arguments to be passed to or from other methods.
+#' 
+#' @method print phylosimsignal
+#' @export
+print.phylosimsignal <- function(x, ...){
   
   res <- paste(as.matrix(x$signal.mean), " (",
                as.matrix(x$signal.qmax), " - ",
@@ -61,12 +67,30 @@ print.phylosimsignal <- function(x){
 }
 
 
-
+#' Plot signal estimation as a fraction of a Brownian Motion process.
+#' 
+#' @param x an object of class \code{phylosimsignal}.
+#' @param methods a character vector giving the methods
+#' (included in the \code{phylosimsignal} object) to plot.
+#' @param traits a character vector giving the traits
+#' (included in the \code{phylosimsignal} object) to plot.
+#' @param stacked.methods If different methods have been used, should they
+#' be plotted on the same graphic (\code{TRUE}) or not (\code{FALSE}, default).
+#' @param stacked.traits If different traits have been used, should they
+#' be plotted on the same graphic (\code{TRUE}) or not (\code{FALSE}, default).
+#' @param print.quantiles logical stating whether quantiles should be plotted.
+#' @param col a vector of colors for the different methods.
+#' @param legend a logical. If \code{stacked.methods} is set to \code{TRUE},
+#' should a legend be printed to differentiate the different methods?
+#' @param ... further arguments to be passed to or from other methods.
+#' 
+#' @method plot phylosimsignal
+#' @export
 plot.phylosimsignal <- function(x, methods=NULL, traits=NULL,
                                 stacked.methods=FALSE, stacked.traits=FALSE,
                                 print.quantiles=TRUE, col=1:5, legend=TRUE, ...){
   
-  x <- subsetPhyloSimSignal(x, methods=methods, traits=traits)
+  x <- subsetPhyloSimSignal(x, methods = methods, traits = traits)
   sim.stat <- x$phylosim$sim.stat
   nstat <- dim(sim.stat)[2]
   ntrait <- nrow(x$signal.mean)
