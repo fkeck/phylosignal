@@ -4,7 +4,8 @@ language: r
 sudo: required
 warnings_are_errors: true
 
-apt_packages: libcurl
+apt_packages:
+ - libcurl4-openssl-dev
 
 env:
 global:
