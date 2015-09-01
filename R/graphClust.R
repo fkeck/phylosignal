@@ -85,18 +85,18 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
     adj.mat <- (dmat.phylo/lim.p)^2 + (dmat.trait/lim.t)^2 < 1
   }
   
-  gr <- graph.adjacency(adj.mat, mode = "lower", diag = FALSE)
+  gr <- igraph::graph.adjacency(adj.mat, mode = "lower", diag = FALSE)
   
-  gr.decomp <- decompose.graph(gr)
-  gr.decomp.names <- lapply(gr.decomp, function(x) V(x)$name)
-  gr.decomp.den <- sapply(gr.decomp, graph.density)
+  gr.decomp <- igraph::decompose.graph(gr)
+  gr.decomp.names <- lapply(gr.decomp, function(x) igraph::V(x)$name)
+  gr.decomp.den <- sapply(gr.decomp, igraph::graph.density)
   names(gr.decomp.den) <- 1:length(gr.decomp)
     
-  clust.gr <- clusters(gr)
+  clust.gr <- igraph::clusters(gr)
   clust <- clust.gr$membership
-  names(clust) <- V(gr)$name
+  names(clust) <- igraph::V(gr)$name
   
-  inclusion <- (degree(gr) + 1) / clust.gr$csize[clust.gr$membership]
+  inclusion <- (igraph::degree(gr) + 1) / clust.gr$csize[clust.gr$membership]
   
   meta <- list(p4d = p4d, trait = trait, adj.mat = adj.mat,
                dmat.phylo = dmat.phylo, dmat.trait = dmat.trait,
@@ -180,7 +180,7 @@ plot.graphclust <- function(x, which = c("selection", "graph", "tree"), ask = TR
   }
   
   if("graph" %in% which){
-    plot.igraph(x$meta$graph, vertex.color = graph.gcol, vertex.label.color = 1, vertex.label.family = "")
+    igraph::plot.igraph(x$meta$graph, vertex.color = graph.gcol, vertex.label.color = 1, vertex.label.family = "")
   }
   if("tree" %in% which){
     barplot(x$meta$p4d, x$meta$trait, bar.col = tree.gcol, center = T, scale = T)
