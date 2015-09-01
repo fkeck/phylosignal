@@ -103,6 +103,8 @@ descentsNames <- function(phy, node){
 #' Default to \code{FALSE} so the function returns the matrix of distance.
 #' 
 #' @return A squared matrix. A matrix of class \code{dist} if \code{prox} is set to \code{FALSE}.
+#' @examples
+#' x <- distEq(5)
 distEq <- function(n, prox = FALSE){
   M <- sapply(1:n, function(x) abs((1:n) - x))
   if(prox){

@@ -4,6 +4,10 @@ language: r
 sudo: required
 warnings_are_errors: true
 
+env:
+global:
+- CRAN=http://cran.rstudio.com
+
 r_binary_packages:
 - ade4
 - ape
@@ -28,3 +32,4 @@ r_binary_packages:
 - phylobase
 - adegenet
 - adephylo
+- RCurl
