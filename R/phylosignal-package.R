@@ -1,7 +1,6 @@
 #' phylosignal
 #' 
 #' @useDynLib phylosignal
-#' @import RcppArmadillo
 #' @importFrom Rcpp evalCpp
 #' @exportPattern "^[[:alpha:]]+"
 #' @import adephylo
