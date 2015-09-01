@@ -18,4 +18,7 @@ A squared matrix. A matrix of class \code{dist} if \code{prox} is set to \code{F
 \description{
 This function return a distance (or proximity) matrix between n points regularly distributed in 1 dimension.
 }
+\examples{
+x <- distEq(5)
+}
 
