@@ -6,7 +6,8 @@
 #' @exportPattern "^[[:alpha:]]+"
 #' @import adephylo
 #' @import ape
-#' @import phylobase
+#' @importFrom phylobase extractTree tdata
+#' @importMethodsFrom phylobase as
 #' @importFrom boot boot boot.ci
 #' @importFrom igraph graph.adjacency decompose.graph V graph.density clusters degree plot.igraph
 #' 
