@@ -9,7 +9,6 @@ Description: A collection of tools to explore the phylogenetic signal in univari
 License: GPL-3
 Imports:
     Rcpp (>= 0.11.0),
-    RcppArmadillo (>= 0.4.400.0),
     adephylo,
     igraph,
     ape,
