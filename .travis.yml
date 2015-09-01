@@ -3,3 +3,28 @@ language: r
 
 sudo: required
 warnings_are_errors: true
+
+r_binary_packages:
+- ade4
+- ape
+- chron
+- httpuv
+- deldir
+- lazyeval
+- openssl
+- plyr
+- RcppArmadillo
+- rncl
+- sp
+- uuid
+- XML
+- dplyr
+- reshape2
+- seqinr
+- data.table
+- scales
+- NMF
+- igraph
+- phylobase
+- adegenet
+- adephylo
