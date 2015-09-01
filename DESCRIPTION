@@ -13,5 +13,6 @@ Imports:
     igraph,
     ape,
     phylobase,
-    boot
+    boot,
+    RCurl
 LinkingTo: Rcpp, RcppArmadillo

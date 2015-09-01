@@ -5,6 +5,7 @@
 #' @exportPattern "^[[:alpha:]]+"
 #' @import adephylo
 #' @import ape
+#' @import RCurl
 #' @importFrom phylobase phylo4d extractTree tdata tipLabels
 #' @importMethodsFrom phylobase as
 #' @importFrom boot boot boot.ci
