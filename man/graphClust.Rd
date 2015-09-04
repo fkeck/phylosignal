@@ -50,4 +50,12 @@ All the methods supported by \code{\link[stats]{dist}} are available:
 "\code{canberra}", "\code{binary}" and "\code{minkowski}".
 See \code{\link[stats]{dist}} for details about the methods.
 }
+\examples{
+data(navic)
+gC <- graphClust(navic, lim.phylo = 1, lim.trait = 2, scale.lim = FALSE)
+gC
+plot.graphclust(gC, which = "selection", ask = FALSE)
+plot.graphclust(gC, which = "graph", ask = FALSE)
+plot.graphclust(gC, which = "tree", ask = FALSE)
+}
 

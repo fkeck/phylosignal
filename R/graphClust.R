@@ -33,6 +33,14 @@
 #' 
 #' @return An object of class \code{graphclust}.
 #'
+#' @examples
+#' data(navic)
+#' gC <- graphClust(navic, lim.phylo = 1, lim.trait = 2, scale.lim = FALSE)
+#' gC
+#' plot.graphclust(gC, which = "selection", ask = FALSE)
+#' plot.graphclust(gC, which = "graph", ask = FALSE)
+#' plot.graphclust(gC, which = "tree", ask = FALSE)
+#' 
 #' @export
 graphClust <- function(p4d, trait = names(tdata(p4d)),
                        lim.phylo = 0.2, lim.trait = 0.2, select.method = "ellipse",
@@ -128,6 +136,13 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
 #' @param ask logical if \code{TRUE} (default), the user is asked before each plot.
 #' @param colored logical indicating if plots must include colors.
 #' @param ... further arguments to be passed to or from other methods. They are currently ignored in this function.
+#'
+#' @examples
+#' data(navic)
+#' gC <- graphClust(navic, lim.phylo = 1, lim.trait = 2, scale.lim = FALSE)
+#' plot.graphclust(gC, which = "selection", ask = FALSE)
+#' plot.graphclust(gC, which = "graph", ask = FALSE)
+#' plot.graphclust(gC, which = "tree", ask = FALSE)
 #'
 #' @method plot graphclust
 #' @export

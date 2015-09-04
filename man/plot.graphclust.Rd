@@ -25,4 +25,11 @@ a plot of edges selection based on phylogenetic against trait distances of taxa 
 a plot of the graph produced with the selected edges
 and a plot of the clustered phylogenetic tree.
 }
+\examples{
+data(navic)
+gC <- graphClust(navic, lim.phylo = 1, lim.trait = 2, scale.lim = FALSE)
+plot.graphclust(gC, which = "selection", ask = FALSE)
+plot.graphclust(gC, which = "graph", ask = FALSE)
+plot.graphclust(gC, which = "tree", ask = FALSE)
+}
 

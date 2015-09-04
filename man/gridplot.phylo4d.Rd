@@ -97,4 +97,12 @@ Recycled if necessary.}
 \description{
 Gridplot of Traits Values along a Phylogeny
 }
+\examples{
+data(navic)
+gridplot(navic)
+
+# Multivariate data
+tipData(navic) <- matrix(rnorm(170), nrow = 17)
+gridplot(navic)
+}
 

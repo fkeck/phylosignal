@@ -48,6 +48,11 @@ The phylogenetic distance matrix is computed internally
 using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
 See \code{\link[adephylo]{distTips}} for details about the methods.
 }
+\examples{
+data(navic)
+pc <- phylo
+plot(pc)
+}
 \references{
 Oden N.L. & Sokal R.R. (1986) Directional Autocorrelation: An Extension of Spatial Correlograms to Two Dimensions. Systematic Zoology 35, 608-617.
 }

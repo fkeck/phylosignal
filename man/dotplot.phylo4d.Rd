@@ -116,4 +116,8 @@ Columns and rows names must match with traits and tips labels, respectively.}
 \description{
 Dotplot of Traits Values along a Phylogeny
 }
+\examples{
+data(navic)
+dotplot(navic)
+}
 

@@ -133,7 +133,7 @@ Columns and rows names must match with traits and tips labels, respectively.}
 \item{...}{further arguments to be passed to \code{plot.phylo}.}
 }
 \description{
-This function provide an interface to plot \code{phylo4d} object
+This function provide a general interface to plot \code{phylo4d} object
 (i.e. phylogenetic tree and data).
 }
 

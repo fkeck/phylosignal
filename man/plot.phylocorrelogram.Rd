@@ -21,4 +21,9 @@
 \description{
 This function plots phylogenetic correlograms produced by \code{\link{phyloCorrelogram}}
 }
+\examples{
+data(navic)
+pc <- phylo
+plot(pc)
+}
 

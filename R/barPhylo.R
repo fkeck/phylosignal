@@ -2,7 +2,7 @@
 
 #' Plots of Traits Values along a Phylogeny
 #'
-#' This function provide an interface to plot \code{phylo4d} object
+#' This function provide a general interface to plot \code{phylo4d} object
 #' (i.e. phylogenetic tree and data).
 #' 
 #' @param p4d a \code{phylo4d} object.
@@ -771,6 +771,12 @@ focusStop <- function(){
 #' Barplot of Traits Values along a Phylogeny
 #' 
 #' @inheritParams multiplot.phylo4d
+#' 
+#' @examples
+#' data(navic)
+#' barplot(navic)
+#' 
+#' @method barplot phylo4d
 #' @export
 barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, 
                             tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
@@ -794,18 +800,15 @@ barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale
   
 }
 
-#' Barplot
-#' 
-#' @param ... further arguments passed to or from other methods.
-#' @export
-barplot <- function(...){
-  UseMethod("barplot")
-}
 
 
 #' Dotplot of Traits Values along a Phylogeny
 #' 
 #' @inheritParams multiplot.phylo4d
+#' @examples
+#' data(navic)
+#' dotplot(navic)
+#' 
 #' @export
 dotplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
                             tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
@@ -839,8 +842,18 @@ dotplot <- function(...){
   UseMethod("dotplot")
 }
 
+
 #' Gridplot of Traits Values along a Phylogeny
 #' @inheritParams multiplot.phylo4d
+#' 
+#' @examples
+#' data(navic)
+#' gridplot(navic)
+#' 
+#' # Multivariate data
+#' tipData(navic) <- matrix(rnorm(170), nrow = 17)
+#' gridplot(navic)
+#' 
 #' @export
 gridplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE,
                              tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
