@@ -38,3 +38,8 @@ r_binary_packages:
 - adegenet
 - adephylo
 - RCurl
+
+notifications:
+email:
+on_success: change
+on_failure: change
