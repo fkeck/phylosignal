@@ -771,6 +771,7 @@ focusStop <- function(){
 #' Barplot of Traits Values along a Phylogeny
 #' 
 #' @inheritParams multiplot.phylo4d
+#' @param height a \code{phylo4d} object.
 #' 
 #' @examples
 #' data(navic)
@@ -778,7 +779,7 @@ focusStop <- function(){
 #' 
 #' @method barplot phylo4d
 #' @export
-barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, 
+barplot.phylo4d <- function(height, trait = names(tdata(height)), center = TRUE, scale = TRUE, 
                             tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
                             tree.open.angle = 0, tree.open.crown = TRUE,
                             show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
@@ -788,7 +789,7 @@ barplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale
                             show.box = FALSE, grid.vertical = TRUE, grid.horizontal = FALSE, grid.col = "grey25",
                             grid.lty = "dashed", ...){
   
-  multiplot.phylo4d(p4d, trait = trait, center = center, scale = scale, plot.type = "barplot",
+  multiplot.phylo4d(p4d = height, trait = trait, center = center, scale = scale, plot.type = "barplot",
                     tree.ladderize = tree.ladderize, tree.type = tree.type, tree.ratio = tree.ratio, tree.xlim = tree.xlim,
                     tree.open.angle = tree.open.angle, tree.open.crown = tree.open.crown,
                     show.tip = show.tip, tip.labels = tip.labels, tip.col = tip.col, tip.cex = tip.cex, tip.font = tip.font, tip.adj = tip.adj,
@@ -851,6 +852,7 @@ dotplot <- function(...){
 #' gridplot(navic)
 #' 
 #' # Multivariate data
+#' require(phylobase)
 #' tipData(navic) <- matrix(rnorm(170), nrow = 17)
 #' gridplot(navic)
 #' 
