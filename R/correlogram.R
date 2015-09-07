@@ -38,7 +38,7 @@
 #' 
 #' @examples
 #' data(navic)
-#' pc <- phylo
+#' pc <- phyloCorrelogram(navic)
 #' plot(pc)
 #' 
 #' @references 
@@ -110,7 +110,7 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
 #' 
 #' @examples
 #' data(navic)
-#' pc <- phylo
+#' pc <- phyloCorrelogram(navic)
 #' plot(pc)
 #' 
 #' @method plot phylocorrelogram
