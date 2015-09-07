@@ -711,6 +711,29 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
 #' For each part of the plot, the coordinate system is restored, making edition easier.
 #' For the phylogeny, post-editing functions of the package \code{ape} like \code{nodelabels} can be used.
 #'
+#' @examples
+#' require(ape)
+#' require(phylobase)
+#' data(navic)
+#' dat <- tdata(navic)
+#' neidium.mean <- mean(dat[c("Neidium bisulcatum", "Neidium affine", "Neidium productum"),])
+#' stauroneis.mean <- mean(dat[c("Stauroneis kriegeri", "Stauroneis acuta", "Stauroneis gracilior", "Stauroneis phoenicenteron"), ])
+#' 
+#' barplot.phylo4d(navic, center = FALSE, scale = FALSE, data.xlim= c(0, 6), grid.vertical = FALSE)
+#' 
+#' focusTree()
+#' nodelabels(node=c(22, 32), pch = 20, cex = 3, col = c(2, 3))
+#' 
+#' focusTraits()
+#' segments(x0 = neidium.mean, y0 = 14.5, x1 = neidium.mean, y1 = 17.5, col = 3, lty = "dashed", lwd = 2)
+#' segments(x0 = stauroneis.mean, y0 = 2.5, x1 = stauroneis.mean, y1 = 7.5, col = 2, lty = "dashed", lwd = 2)
+#' 
+#' focusTips()
+#' rect(xleft = 0, ybottom = 2.5, xright = 0.9, ytop = 7.5, col = "#FF000020", border = NA)
+#' rect(xleft = 0, ybottom = 14.5, xright = 0.9, ytop = 17.5, col = "#00FF0020", border = NA)
+#'
+#' focusStop()
+#'
 #'@rdname focus
 #'@export
 focusTraits <- function(x){
