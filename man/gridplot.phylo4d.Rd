@@ -102,6 +102,7 @@ data(navic)
 gridplot(navic)
 
 # Multivariate data
+require(phylobase)
 tipData(navic) <- matrix(rnorm(170), nrow = 17)
 gridplot(navic)
 }

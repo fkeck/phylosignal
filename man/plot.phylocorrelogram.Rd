@@ -23,7 +23,7 @@ This function plots phylogenetic correlograms produced by \code{\link{phyloCorre
 }
 \examples{
 data(navic)
-pc <- phylo
+pc <- phyloCorrelogram(navic)
 plot(pc)
 }
 

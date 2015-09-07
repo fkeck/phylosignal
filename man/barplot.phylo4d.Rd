@@ -4,12 +4,12 @@
 \alias{barplot.phylo4d}
 \title{Barplot of Traits Values along a Phylogeny}
 \usage{
-\method{barplot}{phylo4d}(p4d, trait = names(tdata(p4d)), center = TRUE,
-  scale = TRUE, tree.ladderize = FALSE, tree.type = "phylogram",
-  tree.ratio = NULL, tree.xlim = NULL, tree.open.angle = 0,
-  tree.open.crown = TRUE, show.tip = TRUE, tip.labels = NULL,
-  tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
-  data.xlim = NULL, bar.lwd = 10, bar.col = "grey35",
+\method{barplot}{phylo4d}(height, trait = names(tdata(height)),
+  center = TRUE, scale = TRUE, tree.ladderize = FALSE,
+  tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+  tree.open.angle = 0, tree.open.crown = TRUE, show.tip = TRUE,
+  tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3,
+  tip.adj = 0, data.xlim = NULL, bar.lwd = 10, bar.col = "grey35",
   show.data.axis = TRUE, show.trait = TRUE, trait.labels = NULL,
   trait.col = "black", trait.cex = 1, trait.font = 1,
   trait.bg.col = "grey90", error.bar.sup = NULL, error.bar.inf = NULL,
@@ -17,7 +17,7 @@
   grid.horizontal = FALSE, grid.col = "grey25", grid.lty = "dashed", ...)
 }
 \arguments{
-\item{p4d}{a \code{phylo4d} object.}
+\item{height}{a \code{phylo4d} object.}
 
 \item{trait}{the traits in the \code{phylo4d} object to include in the plot.
 Can be a character vector giving the name of the traits or numbers giving the column index

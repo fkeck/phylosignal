@@ -50,7 +50,7 @@ See \code{\link[adephylo]{distTips}} for details about the methods.
 }
 \examples{
 data(navic)
-pc <- phylo
+pc <- phyloCorrelogram(navic)
 plot(pc)
 }
 \references{
