@@ -719,7 +719,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
 #' neidium.mean <- mean(dat[c("Neidium bisulcatum", "Neidium affine", "Neidium productum"),])
 #' stauroneis.mean <- mean(dat[c("Stauroneis kriegeri", "Stauroneis acuta", "Stauroneis gracilior", "Stauroneis phoenicenteron"), ])
 #' 
-#' barplot.phylo4d(navic, center = FALSE, scale = FALSE, data.xlim= c(0, 6), grid.vertical = FALSE)
+#' dotplot(navic, center = FALSE, scale = FALSE, data.xlim= c(0, 6))
 #' 
 #' focusTree()
 #' nodelabels(node=c(22, 32), pch = 20, cex = 3, col = c(2, 3))
