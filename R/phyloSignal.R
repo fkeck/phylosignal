@@ -30,9 +30,18 @@
 #' Revell L.J. (2012) phytools: an R package for phylogenetic comparative biology (and other things). Methods in Ecology and Evolution 3, 217-223.
 #' Pavoine S. & Ricotta C. (2013) Testing for Phylogenetic Signal in Biological Traits: The Ubiquity of Cross-Product Statistics. Evolution 67, 828-840.
 #'
-#'@seealso \code{\link{phyloSimSignal}} .
-#'@rdname phylosignalStats
-#'@export
+#' @seealso \code{\link{phyloSimSignal}} .
+#' 
+#' @examples
+#' require(ape)
+#' require(phylobase)
+#' data(navic)
+#' tipData(navic)$rand <- rnorm(17)
+#' tipData(navic)$BM <- rTraitCont(as(navic, "phylo"))
+#' phyloSignal(navic)
+#' 
+#' @rdname phylosignalStats
+#' @export
 phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"), reps = 999){
   methods <- match.arg(methods, several.ok = TRUE)
   p4 <- extractTree(p4d)

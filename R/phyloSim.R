@@ -12,16 +12,22 @@
 #' @param model the model to use for traits simulation (only "\code{BM}", default, is available).
 #' @param pb a logical. Should a progress bar be printed? (default \code{TRUE}).
 #'
-#'@details By default, the \code{methods} argument is set to "\code{all}" and all the available methods are used.
-#'The user can specify which method(s) to use. Possible values are
-#'"\code{I}", "\code{Cmean}", "\code{Lambda}", "\code{K}" and "\code{K.star}",
-#'see \code{\link{phyloSignal}} for further details.
+#' @details By default, the \code{methods} argument is set to "\code{all}" and all the available methods are used.
+#' The user can specify which method(s) to use. Possible values are
+#' "\code{I}", "\code{Cmean}", "\code{Lambda}", "\code{K}" and "\code{K.star}",
+#' see \code{\link{phyloSignal}} for further details.
 #'
-#'@return An object of class \code{phylosim}.
+#' @return An object of class \code{phylosim}.
 #'
-#'@seealso \code{\link{phyloSimSignal}}.
+#' @seealso \code{\link{phyloSimSignal}}.
 #'
-#'@export
+#' @examples
+#' data(navic)
+#' psim <- phyloSim(navic)
+#' plot(psim)
+#' plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
+#'
+#' @export
 phyloSim <- function(tree, methods=c("all", "I", "Cmean", "Lambda", "K", "K.star"),
                      nsim=99, reps=999, model="BM", pb=TRUE){
   if (inherits(tree, "phylo4")){
@@ -72,6 +78,12 @@ phyloSim <- function(tree, methods=c("all", "I", "Cmean", "Lambda", "K", "K.star
 #' @param ... further arguments to be passed to or from other methods.
 #'
 #'@seealso \code{\link{phyloSim}}.
+#'
+#' @examples
+#' data(navic)
+#' psim <- phyloSim(navic)
+#' plot(psim)
+#' plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
 #'
 #'@method plot phylosim
 #'@export
