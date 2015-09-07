@@ -14,5 +14,6 @@ Imports:
     ape,
     phylobase,
     boot,
-    RCurl
+    RCurl,
+    graphics
 LinkingTo: Rcpp, RcppArmadillo

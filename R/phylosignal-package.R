@@ -9,6 +9,7 @@
 #' @importFrom phylobase phylo4d extractTree tdata tipLabels
 #' @importFrom boot boot boot.ci
 #' @importFrom igraph graph.adjacency decompose.graph V graph.density clusters degree plot.igraph
+#' @importFrom graphics barplot
 #' 
 #' @name phylosignal
 #' @docType package
