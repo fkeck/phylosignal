@@ -33,6 +33,12 @@ The user can specify which method(s) to use. Possible values are
 "\code{I}", "\code{Cmean}", "\code{Lambda}", "\code{K}" and "\code{K.star}",
 see \code{\link{phyloSignal}} for further details.
 }
+\examples{
+data(navic)
+psim <- phyloSim(navic)
+plot(psim)
+plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
+}
 \seealso{
 \code{\link{phyloSimSignal}}.
 }

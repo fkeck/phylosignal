@@ -29,6 +29,14 @@ The user can specify which method(s) to use. Possible methods are
 "\code{I}" (Gittleman & Kot 1990), "\code{Cmean}" (Abouheif 1999)", "\code{Lambda}" (Pagel 1999),
 "\code{K}" and "\code{K.star}" (Blomberg et al. 2003).
 }
+\examples{
+require(ape)
+require(phylobase)
+data(navic)
+tipData(navic)$rand <- rnorm(17)
+tipData(navic)$BM <- rTraitCont(as(navic, "phylo"))
+phyloSignal(navic)
+}
 \author{
 This function is a general wrapper for C++ subroutines.
 C++ code is adapted from R functions in Pavoine and Ricotta (2013)

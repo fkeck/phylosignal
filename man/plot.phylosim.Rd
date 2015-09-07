@@ -32,6 +32,12 @@ should a legend be printed to differentiate the different methods?}
 This function plots a \code{phylosim} object to visualize the behaviour of
 phylogenetic signal statistics for a given phylogenetic tree
 }
+\examples{
+data(navic)
+psim <- phyloSim(navic)
+plot(psim)
+plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
+}
 \seealso{
 \code{\link{phyloSim}}.
 }
