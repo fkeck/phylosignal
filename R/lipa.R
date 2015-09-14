@@ -2,7 +2,8 @@
 
 #' Local Indicator of Phylogenetic Association
 #'
-#' This function computes Local Indicator of Phylogenetic Association (local Moran's I) for each tip of a tree.
+#' This function computes Local Indicator of Phylogenetic Association (local Moran's I)
+#' for each tip of a tree.
 #' Tests are based on permutations.
 #' 
 #' @param p4d a \code{phylo4d} object.
@@ -12,13 +13,15 @@
 #' @param reps a numeric value. Number of repetitions for the estimation of p.values with randomization.
 #' @param alternative a character string specifying the alternative hypothesis for the tests.
 #' Must be one of \code{greater} (default), \code{two-sided} or \code{less}.
-#' @param prox.phylo a character string specifying the method used to compute phylogenetic proximities.
+#' @param prox.phylo a matrix of phylogenetic proximities or
+#' a character string specifying a method to compute it.
 #' See Details.
 #' @param as.p4d logical. Should the results returned as a \code{phylo4d} object?
 #' 
-#' @details The phylogenetic proximity matrix is computed internally
+#' @details If "\code{prox.phylo}" is a character string,
+#' the phylogenetic proximity matrix is computed internally
 #' using the function \code{\link[adephylo]{proxTips}} from the package \pkg{adephylo}.
-#' Different methods supported by \code{\link[adephylo]{proxTips}} are available:
+#' Different methods are available:
 #' "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
 #' See \code{\link[adephylo]{proxTips}} for details about the methods.
 #' 
@@ -52,8 +55,16 @@ lipa <- function(p4d, trait = names(tdata(p4d)), reps=999,
   if(is.numeric(trait)){
     trait <- names(tdata(p4d))[trait]
   }
-  prox.phylo <- match.arg(prox.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
-  W <- proxTips(phy, method = prox.phylo)[new.order, new.order]
+  if(is.vector(prox.phylo) & is.character(prox.phylo)){
+    prox.phylo <- match.arg(prox.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
+    W <- proxTips(phy, method = prox.phylo)[new.order, new.order]
+  } else {
+    if(is.matrix(prox.phylo)){
+      W <- W[rownames(X), rownames(X)]
+    } else {
+      stop("prox.phylo is not valid")
+    }
+  }
   X <- scale(X, scale = FALSE)
   X.lag <- W %*% X
   S2 <- diag(var(X))

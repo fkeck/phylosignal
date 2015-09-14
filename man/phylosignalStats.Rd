@@ -5,7 +5,7 @@
 \title{Computes phylogenetic signal with different methods}
 \usage{
 phyloSignal(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
-  reps = 999)
+  reps = 999, W = NULL)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}
@@ -13,6 +13,9 @@ phyloSignal(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
 \item{methods}{a character vector giving the methods to compute phylogenetic signal (see Details).}
 
 \item{reps}{an integer. The number of repetitions for the estimation of p.values with randomization.}
+
+\item{W}{an optional matrix of phylogenetic weights to compute Moran's I. By default the matrix
+is computed with the function \code{\link[adephylo]{proxTips}} with patristic distances.}
 }
 \value{
 A list of two dataframes with the values of statistics and associated

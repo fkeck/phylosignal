@@ -22,7 +22,7 @@ in the table of the data slot of the \code{phylo4d} object.}
 \item{select.method}{a character string specifying the method used to select edges.
 This must be one of "\code{line}", "\code{rectangle}" or "\code{ellipse}".}
 
-\item{dist.phylo}{a character string specifying the method used to compute phylogenetic distances.
+\item{dist.phylo}{a matrix of phylogenetic distances or a character string specifying a method to compute it.
 See Details.}
 
 \item{dist.trait}{a character string specifying the method used to compute traits distances.
@@ -38,13 +38,15 @@ An object of class \code{graphclust}.
 This function extracts clusters of species based on traits values and phylogenetic proximities.
 }
 \details{
-The phylogenetic distance matrix is computed internally
+If "\code{dist.phylo}" is a character string,
+the phylogenetic distance matrix is computed internally
 using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
 All the methods supported by \code{\link[adephylo]{distTips}} are available:
 "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
 See \code{\link[adephylo]{distTips}} for details about the methods.
 
-The trait-based distance matrix is computed with the \code{\link[stats]{dist}} function.
+If "\code{dist.trait}" is a character string,
+the traits distance matrix is computed with the \code{\link[stats]{dist}} function.
 All the methods supported by \code{\link[stats]{dist}} are available:
 "\code{euclidean}","\code{maximum}", "\code{manhattan}",
 "\code{canberra}", "\code{binary}" and "\code{minkowski}".

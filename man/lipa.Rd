@@ -19,7 +19,8 @@ or numbers giving the column in the table of the data slot of the \code{phylo4d}
 \item{alternative}{a character string specifying the alternative hypothesis for the tests.
 Must be one of \code{greater} (default), \code{two-sided} or \code{less}.}
 
-\item{prox.phylo}{a character string specifying the method used to compute phylogenetic proximities.
+\item{prox.phylo}{a matrix of phylogenetic proximities or
+a character string specifying a method to compute it.
 See Details.}
 
 \item{as.p4d}{logical. Should the results returned as a \code{phylo4d} object?}
@@ -36,13 +37,15 @@ If \code{as.p4d} is \code{TRUE}, the function returns a \code{phylo4d} object
 with LIPA values as tips associated data.
 }
 \description{
-This function computes Local Indicator of Phylogenetic Association (local Moran's I) for each tip of a tree.
+This function computes Local Indicator of Phylogenetic Association (local Moran's I)
+for each tip of a tree.
 Tests are based on permutations.
 }
 \details{
-The phylogenetic proximity matrix is computed internally
+If "\code{prox.phylo}" is a character string,
+the phylogenetic proximity matrix is computed internally
 using the function \code{\link[adephylo]{proxTips}} from the package \pkg{adephylo}.
-Different methods supported by \code{\link[adephylo]{proxTips}} are available:
+Different methods are available:
 "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
 See \code{\link[adephylo]{proxTips}} for details about the methods.
 }

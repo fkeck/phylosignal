@@ -9,6 +9,8 @@
 #' @param methods a character vector giving the methods to compute phylogenetic signal (see Details).
 #' @param nsim a numeric value. Number of simulated traits at each step in the gradient.
 #' @param reps a numeric value. Number of repetitions for the estimation of p.values with randomization.
+#' @param W an optional matrix of phylogenetic weights to compute Moran's I. By default the matrix
+#' is computed with the function \code{\link[adephylo]{proxTips}} with patristic distances.
 #' @param model the model to use for traits simulation (only "\code{BM}", default, is available).
 #' @param pb a logical. Should a progress bar be printed? (default \code{TRUE}).
 #'
@@ -28,20 +30,24 @@
 #' plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
 #'
 #' @export
-phyloSim <- function(tree, methods=c("all", "I", "Cmean", "Lambda", "K", "K.star"),
-                     nsim=99, reps=999, model="BM", pb=TRUE){
+phyloSim <- function(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
+                     nsim = 99, reps = 999, W = NULL, model = "BM", pb = TRUE){
   if (inherits(tree, "phylo4")){
     tree <- as(tree, "phylo")
   }
   if (!inherits(tree, "phylo")){
     stop("x has to be a phylo, phylo4 or phylo4d object")
   }
-  methods <- match.arg(methods, several.ok=TRUE)
-  pb <- txtProgressBar(0, nsim, style=3)
+  methods <- match.arg(methods, several.ok = TRUE)
+  pb <- txtProgressBar(0, nsim, style = 3)
   sim.list <- vector("list", nsim)
   for(i in 1:nsim){
-    sim.list[[i]] <- phyloSignal(rTraitContWeight(tree, model=model, weight=seq(from=0, to=1, by=0.01), as.p4d=TRUE),
-                                 methods=methods, reps=reps)
+    sim.list[[i]] <- phyloSignal(rTraitContWeight(tree, model = model,
+                                                  weight = seq(from = 0, to = 1, by = 0.01),
+                                                  as.p4d = TRUE),
+                                 methods = methods,
+                                 reps=reps,
+                                 W = W)
     setTxtProgressBar(pb, i)
   }
   close(pb)
@@ -52,7 +58,11 @@ phyloSim <- function(tree, methods=c("all", "I", "Cmean", "Lambda", "K", "K.star
   sim.pvalue <- lapply(sim.list, function(x) x[["pvalue"]])
   sim.pvalue <- array(unlist(sim.pvalue),
                       dim = c(nrow(sim.pvalue[[1]]), ncol(sim.pvalue[[1]]), length(sim.pvalue)))
-  res <- list(tree=tree, sim.stat=sim.stat, sim.pvalue=sim.pvalue, stat.names=stat.names, model=model)
+  res <- list(tree = tree,
+              sim.stat = sim.stat,
+              sim.pvalue = sim.pvalue,
+              stat.names = stat.names,
+              model = model)
   class(res) <- "phylosim"
   return(res)
 }

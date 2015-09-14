@@ -7,8 +7,7 @@
 #' @param trait the traits in the \code{phylo4d} object to use for the correlogram.
 #' Can be a character vector giving the name of the traits or numbers giving the column index
 #' in the table of the data slot of the \code{phylo4d} object.
-#' @param dist.phylo a character string specifying the method used to compute phylogenetic distances.
-#' Available distances are "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
+#' @param dist.phylo a matrix of phylogenetic distances or a character string specifying a method to compute it.
 #' See Details.
 #' @param sigma a numeric value giving the standard deviation of the normal distribution used
 #' to compute the matrix of phylogenetic weights. If \code{NULL} (default),
@@ -27,7 +26,8 @@
 #' If there is one trait, the function computes Moran's I. If there is more than one trait,
 #' the function computes the Mantel's statistic (Oden and Sokal 1986).
 #' 
-#' The phylogenetic distance matrix is computed internally
+#' If "\code{dist.phylo}" is a character string,
+#' the phylogenetic distance matrix is computed internally
 #' using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
 #' See \code{\link[adephylo]{distTips}} for details about the methods.
 #' 
@@ -64,8 +64,18 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
     trait <- names(tdata(p4d))[trait]
   }
   
-  dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
-  D <- as.matrix(distTips(phy, method = dist.phylo))
+  if(is.vector(dist.phylo) & is.character(dist.phylo)){
+    dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
+    D <- distTips(phy, method = dist.phylo)
+    D <- as.matrix(D)
+    D <- D[tips, tips]
+  } else {
+    if(is.matrix(dist.phylo)){
+      D <- dist.phylo[tips, tips]
+    } else {
+      stop("dist.phylo is not valid")
+    }
+  }
   D.max <- max(D)
   
   if(is.null(sigma)){

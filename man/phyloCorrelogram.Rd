@@ -14,8 +14,7 @@ phyloCorrelogram(p4d, trait = names(tdata(p4d)), dist.phylo = "patristic",
 Can be a character vector giving the name of the traits or numbers giving the column index
 in the table of the data slot of the \code{phylo4d} object.}
 
-\item{dist.phylo}{a character string specifying the method used to compute phylogenetic distances.
-Available distances are "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
+\item{dist.phylo}{a matrix of phylogenetic distances or a character string specifying a method to compute it.
 See Details.}
 
 \item{sigma}{a numeric value giving the standard deviation of the normal distribution used
@@ -44,7 +43,8 @@ The confidence interval envelope is computed by bootstrapping.
 If there is one trait, the function computes Moran's I. If there is more than one trait,
 the function computes the Mantel's statistic (Oden and Sokal 1986).
 
-The phylogenetic distance matrix is computed internally
+If "\code{dist.phylo}" is a character string,
+the phylogenetic distance matrix is computed internally
 using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
 See \code{\link[adephylo]{distTips}} for details about the methods.
 }

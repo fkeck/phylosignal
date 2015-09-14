@@ -5,7 +5,7 @@
 \title{Simulate the behaviour of phylogenetic signal statistics with a given phylogeny}
 \usage{
 phyloSim(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
-  nsim = 99, reps = 999, model = "BM", pb = TRUE)
+  nsim = 99, reps = 999, W = NULL, model = "BM", pb = TRUE)
 }
 \arguments{
 \item{tree}{a \code{phylo}, \code{phylo4} or \code{phylo4d} object.}
@@ -15,6 +15,9 @@ phyloSim(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
 \item{nsim}{a numeric value. Number of simulated traits at each step in the gradient.}
 
 \item{reps}{a numeric value. Number of repetitions for the estimation of p.values with randomization.}
+
+\item{W}{an optional matrix of phylogenetic weights to compute Moran's I. By default the matrix
+is computed with the function \code{\link[adephylo]{proxTips}} with patristic distances.}
 
 \item{model}{the model to use for traits simulation (only "\code{BM}", default, is available).}
 

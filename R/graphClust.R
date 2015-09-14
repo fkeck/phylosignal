@@ -10,7 +10,7 @@
 #' in the table of the data slot of the \code{phylo4d} object.
 #' @param lim.phylo the maximum phylogenetic distance for edges selection.
 #' @param lim.trait the maximum trait-based distance for edges selection.
-#' @param dist.phylo a character string specifying the method used to compute phylogenetic distances.
+#' @param dist.phylo a matrix of phylogenetic distances or a character string specifying a method to compute it.
 #' See Details.
 #' @param dist.trait a character string specifying the method used to compute traits distances.
 #' See Details.
@@ -19,13 +19,15 @@
 #' @param scale.lim logical (default \code{TRUE}) indicating if \code{lim.phylo} and \code{lim.trait} are scaled
 #' (divided by their max value).
 #' 
-#' @details The phylogenetic distance matrix is computed internally
+#' @details If "\code{dist.phylo}" is a character string,
+#' the phylogenetic distance matrix is computed internally
 #' using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephylo}.
 #' All the methods supported by \code{\link[adephylo]{distTips}} are available:
 #' "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
 #' See \code{\link[adephylo]{distTips}} for details about the methods.
 #' 
-#' The trait-based distance matrix is computed with the \code{\link[stats]{dist}} function.
+#' If "\code{dist.trait}" is a character string,
+#' the traits distance matrix is computed with the \code{\link[stats]{dist}} function.
 #' All the methods supported by \code{\link[stats]{dist}} are available:
 #' "\code{euclidean}","\code{maximum}", "\code{manhattan}",
 #' "\code{canberra}", "\code{binary}" and "\code{minkowski}".
@@ -48,7 +50,6 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
                        scale.lim = TRUE){
   
   select.method <- match.arg(select.method, c("line", "rectangle", "ellipse"))
-  dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
   
   if(is.numeric(trait)){
     trait <- names(tdata(p4d))[trait]
@@ -67,13 +68,30 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
   rownames(X) <- tips
   n.traits <- ncol(X)
   
-  dmat.phylo <- distTips(phy, method = dist.phylo)
-  dmat.phylo <- as.matrix(dmat.phylo)
-  dmat.phylo <- dmat.phylo[tips, tips]
+  if(is.vector(dist.phylo) & is.character(dist.phylo)){
+    dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
+    dmat.phylo <- distTips(phy, method = dist.phylo)
+    dmat.phylo <- as.matrix(dmat.phylo)
+    dmat.phylo <- dmat.phylo[tips, tips]
+  } else {
+    if(is.matrix(dist.phylo)){
+      dmat.phylo <- dist.phylo[tips, tips]
+    } else {
+      stop("dist.phylo is not valid")
+    }
+  }
   
-  dmat.trait <- dist(X, method = dist.trait)
-  dmat.trait <- as.matrix(dmat.trait)
-  dmat.trait <- dmat.trait[tips, tips]
+  if(is.vector(dist.trait) & is.character(dist.trait)){
+    dmat.trait <- dist(X, method = dist.trait)
+    dmat.trait <- as.matrix(dmat.trait)
+    dmat.trait <- dmat.trait[tips, tips]
+  } else {
+    if(is.matrix(dist.trait)){
+      dmat.trait <- dist.trait[tips, tips]
+    } else {
+      stop("dist.trait is not valid")
+    }
+  }
   
   if(scale.lim){
     lim.p <- max(dmat.phylo) * lim.phylo

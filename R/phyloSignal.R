@@ -8,6 +8,8 @@
 #' @param p4d a \code{phylo4d} object.
 #' @param methods a character vector giving the methods to compute phylogenetic signal (see Details).
 #' @param reps an integer. The number of repetitions for the estimation of p.values with randomization.
+#' @param W an optional matrix of phylogenetic weights to compute Moran's I. By default the matrix
+#' is computed with the function \code{\link[adephylo]{proxTips}} with patristic distances.
 #'
 #'@details p4d must be a \code{phylo4d} object as defined in \pkg{phylobase} package.
 #'By default, the \code{methods} argument is set to "\code{all}" and all the available methods are used.
@@ -42,7 +44,7 @@
 #' 
 #' @rdname phylosignalStats
 #' @export
-phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"), reps = 999){
+phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"), reps = 999, W = NULL){
   methods <- match.arg(methods, several.ok = TRUE)
   p4 <- extractTree(p4d)
   phy <- as(p4, "phylo")
@@ -62,7 +64,13 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
   }
   
   if("I" %in% methods){
-    W <- proxTips(p4d, method = "patristic", useC = TRUE)
+    if(is.null(W)){
+      W <- proxTips(p4d, method = "patristic", useC = TRUE)
+    } else {
+      if(is.matrix(W)){
+        W <- W[rownames(X), rownames(X)]
+      }
+    }
     tmp <- apply(X, 2, moranTest, Wr = W, reps = reps)
     res$stat$I <- unlist(sapply(tmp, "[", 1))
     res$pvalue$I <- unlist(sapply(tmp, "[", 2))
