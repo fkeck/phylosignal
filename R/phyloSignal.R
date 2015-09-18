@@ -57,8 +57,8 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
   }
   
   if("Cmean" %in% methods){
-    W <- proxTips(p4d, method = "Abouheif", useC = TRUE)
-    tmp <- apply(X, 2, moranTest, Wr = W, reps = reps)
+    WA <- proxTips(p4d, method = "Abouheif", useC = TRUE)
+    tmp <- apply(X, 2, moranTest, Wr = WA, reps = reps)
     res$stat$Cmean <- unlist(sapply(tmp, "[", 1))
     res$pvalue$Cmean <- unlist(sapply(tmp, "[", 2))
   }
