@@ -39,7 +39,7 @@
 
 #'
 #' @export
-lipa <- function(p4d, trait = names(tdata(p4d)), reps=999,
+lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
                  alternative = "greater", prox.phylo = "patristic", as.p4d = FALSE){
   
   p4 <- extractTree(p4d)
