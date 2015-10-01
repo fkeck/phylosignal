@@ -21,7 +21,11 @@
 #' This is achieved by using a collection of specific phylogenetic weights matrices generated
 #' with the "\code{lag-norm}" method of \code{\link{phyloWeights}} and different values of "\code{mu}".
 #' 
-#' The confidence interval envelope is computed by bootstrapping.
+#' The confidence envelope is computed by bootstrapping.
+#' At each iteration, the autocorrelation is re-estimated after re-standardization of the
+#' matrix of phylogenetic weights.
+#' The nonparametric confidence intervals are computed at each lag by first order normal approximation.
+#' Intervals are constrained between 0 and 1.
 #' 
 #' If there is one trait, the function computes Moran's I. If there is more than one trait,
 #' the function computes the Mantel's statistic (Oden and Sokal 1986).
@@ -76,7 +80,11 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
       stop("dist.phylo is not valid")
     }
   }
-  D.max <- max(D)
+  if(dist.phylo == "Abouheif"){
+    D.max <- max(D[D != max(D)] )
+  } else {
+    D.max <- max(D)
+  }
   
   if(is.null(sigma)){
     sigma <- mean(colMeans(D)/(2 * 1.96))
@@ -90,19 +98,21 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
     Wi <- Wi[tips, tips]
     if(n.traits < 2){
       X <- as.vector(t(scale(X)))
-      bi <- boot::boot(X, function(x, z) moranTest(xr = x[z], Wr = Wi[z, z], reps = 0)$Moran.I, R = ci.bs)
+      bi <- boot::boot(X, function(x, z) moranTest(xr = x[z], Wr = prop.table(Wi[z, z], 1), reps = 0)$Moran.I, R = ci.bs)
       res[i, 2:3] <- boot::boot.ci(bi, type = "norm", conf = ci.conf)$norm[2:3]
       res[i, 4] <- bi$t0
     } else {
       X <- as.matrix(scale(X))
-      bi <- boot::boot(X, function(x, z) mantelStat(xr = x[z, ], Wr = Wi[z, z]), R = ci.bs)
+      bi <- boot::boot(X, function(x, z) mantelStat(xr = x[z, ], Wr = prop.table(Wi[z, z], 1)), R = ci.bs)
       res[i, 2:3] <- boot::boot.ci(bi, type = "norm", conf = ci.conf)$norm[2:3]
       res[i, 4] <- bi$t0
     }
   }
+  res[, 2:3][res[, 2:3] > 1] <- 1
+  res[, 2:3][res[, 2:3] < -1] <- -1
   
   pcr <- list(res = res, trait = trait, dist.phylo = dist.phylo, sigma = sigma,
-              ci.bs = ci.bs, ci.conf = ci.conf)
+              ci.bs = ci.bs, ci.conf = ci.conf, n = n.tips)
   class(pcr) <- "phylocorrelogram"
   return(pcr)  
 }
@@ -113,6 +123,10 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
 #' This function plots phylogenetic correlograms produced by \code{\link{phyloCorrelogram}}
 #' 
 #' @param x a \code{phylocorrelogram} object.
+#' @param show.ci a logical indicating whether to plot the confidence interval envelop (default \code{TRUE}).
+#' @param show.h0 a logical indicating whether to plot the the line showing the expected
+#' value of Moran's I under the null hypothesis of no phylogenetic autocorrelation (default \code{TRUE}).
+#' @param show.test a logical indicating whether to plot indicator of significance (default \code{TRUE}).
 #' @param xlab a label for the x axis.
 #' @param ylab a label for the y axis.
 #' @param main a main title for the plot
@@ -125,21 +139,43 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
 #' 
 #' @method plot phylocorrelogram
 #' @export
-plot.phylocorrelogram <- function(x, xlab = "Phylogenetic distance", ylab = "Correlation",
+plot.phylocorrelogram <- function(x, show.ci = TRUE, show.h0 = TRUE, show.test =TRUE,
+                                  xlab = "Phylogenetic distance", ylab = "Correlation",
                                   main = "Phylogenetic correlogram", ...){
   
   if(class(x) != "phylocorrelogram"){
     stop("x must be an object of class 'phylocorrelogram'.")
   }
   
+  h0 <- -1/(x$n-1)
+  
   plot(NA, type = "n",
        xlim = range(x$res[, 1]),
        ylim = range(x$res[, 2:3]),
        xlab = xlab, ylab = ylab, main = main, ...)
-  lines(x = x$res[, 1], y = x$res[, 2], lty = "dashed")
-  lines(x = x$res[, 1], y = x$res[, 3], lty = "dashed")
+  #abline(h = 0, col = "grey30")
+  if(show.h0){
+    abline(h = h0, col = "grey30")
+  }
+  if(show.ci){
+    lines(x = x$res[, 1], y = x$res[, 2], lty = "dashed")
+    lines(x = x$res[, 1], y = x$res[, 3], lty = "dashed")
+  }
   lines(x = x$res[, 1], y = x$res[, 4], lwd = 2)
-  abline(h = 0)
+  
+  if(show.test){
+    corpos <- x$res[, 2] > h0 & x$res[, 3] > h0
+    corneg <- x$res[, 2] < h0 & x$res[, 3] < h0
+    n.res <- dim(x$res)[1]
+    bar.col <- rep("black", length.out = n.res)
+    bar.col[corpos] <- "red"
+    bar.col[corneg] <- "blue"
+    segments(x0 = x$res[, 1][-n.res],
+             y0 = rep(par("usr")[3], length.out = n.res-1),
+             x1 = x$res[, 1][-1],
+             y1 = rep(par("usr")[3], length.out = n.res-1),
+             col = bar.col, lwd = 10, lend = 1)
+  }
   
 }
 
