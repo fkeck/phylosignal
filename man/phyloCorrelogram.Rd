@@ -38,7 +38,11 @@ This function computes a correlogram on a continuous scale of phylogenetic dista
 This is achieved by using a collection of specific phylogenetic weights matrices generated
 with the "\code{lag-norm}" method of \code{\link{phyloWeights}} and different values of "\code{mu}".
 
-The confidence interval envelope is computed by bootstrapping.
+The confidence envelope is computed by bootstrapping.
+At each iteration, the autocorrelation is re-estimated after re-standardization of the
+matrix of phylogenetic weights.
+The nonparametric confidence intervals are computed at each lag by first order normal approximation.
+Intervals are constrained between 0 and 1.
 
 If there is one trait, the function computes Moran's I. If there is more than one trait,
 the function computes the Mantel's statistic (Oden and Sokal 1986).

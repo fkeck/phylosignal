@@ -4,11 +4,19 @@
 \alias{plot.phylocorrelogram}
 \title{Plot a phylogenetic correlogram}
 \usage{
-\method{plot}{phylocorrelogram}(x, xlab = "Phylogenetic distance",
-  ylab = "Correlation", main = "Phylogenetic correlogram", ...)
+\method{plot}{phylocorrelogram}(x, show.ci = TRUE, show.h0 = TRUE,
+  show.test = TRUE, xlab = "Phylogenetic distance", ylab = "Correlation",
+  main = "Phylogenetic correlogram", ...)
 }
 \arguments{
 \item{x}{a \code{phylocorrelogram} object.}
+
+\item{show.ci}{a logical indicating whether to plot the confidence interval envelop (default \code{TRUE}).}
+
+\item{show.h0}{a logical indicating whether to plot the the line showing the expected
+value of Moran's I under the null hypothesis of no phylogenetic autocorrelation (default \code{TRUE}).}
+
+\item{show.test}{a logical indicating whether to plot indicator of significance (default \code{TRUE}).}
 
 \item{xlab}{a label for the x axis.}
 
