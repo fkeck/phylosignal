@@ -6,7 +6,7 @@
 #' @import adephylo
 #' @import ape
 #' @import RCurl
-#' @importFrom phylobase phylo4d extractTree tdata tipLabels
+#' @importFrom phylobase phylo4d extractTree tdata tipLabels tipData nTips nNodes nodeData<- nodeData
 #' @importFrom boot boot boot.ci
 #' @importFrom igraph graph.adjacency decompose.graph V graph.density clusters degree plot.igraph
 #' @importFrom graphics barplot
