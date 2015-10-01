@@ -57,10 +57,10 @@ lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
   }
   if(is.vector(prox.phylo) & is.character(prox.phylo)){
     prox.phylo <- match.arg(prox.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
-    W <- proxTips(phy, method = prox.phylo)[new.order, new.order]
+    W <- proxTips(phy, method = prox.phylo)[tips, tips]
   } else {
     if(is.matrix(prox.phylo)){
-      W <- W[rownames(X), rownames(X)]
+      W <- prox.phylo[tips, tips]
     } else {
       stop("prox.phylo is not valid")
     }
