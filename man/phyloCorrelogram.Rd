@@ -53,9 +53,11 @@ using the function \code{\link[adephylo]{distTips}} from the package \pkg{adephy
 See \code{\link[adephylo]{distTips}} for details about the methods.
 }
 \examples{
+\dontrun{
 data(navic)
 pc <- phyloCorrelogram(navic)
 plot(pc)
+}
 }
 \references{
 Oden N.L. & Sokal R.R. (1986) Directional Autocorrelation: An Extension of Spatial Correlograms to Two Dimensions. Systematic Zoology 35, 608-617.

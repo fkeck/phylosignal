@@ -30,8 +30,10 @@ value of Moran's I under the null hypothesis of no phylogenetic autocorrelation 
 This function plots phylogenetic correlograms produced by \code{\link{phyloCorrelogram}}
 }
 \examples{
+\dontrun{
 data(navic)
 pc <- phyloCorrelogram(navic)
 plot(pc)
+}
 }
 

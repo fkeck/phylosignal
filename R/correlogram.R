@@ -41,10 +41,11 @@
 #' \code{\link[ape]{correlogram.formula}} in \pkg{ape} for correlograms based on taxonomic levels.
 #' 
 #' @examples
+#' \dontrun{
 #' data(navic)
 #' pc <- phyloCorrelogram(navic)
 #' plot(pc)
-#' 
+#' }
 #' @references 
 #' Oden N.L. & Sokal R.R. (1986) Directional Autocorrelation: An Extension of Spatial Correlograms to Two Dimensions. Systematic Zoology 35, 608-617.
 #' 
@@ -133,10 +134,11 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
 #' @param ... other graphical parameters passed to the \code{plot} function.
 #' 
 #' @examples
+#' \dontrun{
 #' data(navic)
 #' pc <- phyloCorrelogram(navic)
 #' plot(pc)
-#' 
+#' }
 #' @method plot phylocorrelogram
 #' @export
 plot.phylocorrelogram <- function(x, show.ci = TRUE, show.h0 = TRUE, show.test =TRUE,
