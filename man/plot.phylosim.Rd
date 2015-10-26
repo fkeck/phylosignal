@@ -33,10 +33,12 @@ This function plots a \code{phylosim} object to visualize the behaviour of
 phylogenetic signal statistics for a given phylogenetic tree
 }
 \examples{
+\dontrun{
 data(navic)
 psim <- phyloSim(navic)
 plot(psim)
 plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
+}
 }
 \seealso{
 \code{\link{phyloSim}}.

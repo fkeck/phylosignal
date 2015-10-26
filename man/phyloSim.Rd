@@ -37,10 +37,12 @@ The user can specify which method(s) to use. Possible values are
 see \code{\link{phyloSignal}} for further details.
 }
 \examples{
+\dontrun{
 data(navic)
 psim <- phyloSim(navic)
 plot(psim)
 plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
+}
 }
 \seealso{
 \code{\link{phyloSimSignal}}.

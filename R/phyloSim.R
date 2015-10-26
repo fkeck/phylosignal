@@ -24,7 +24,7 @@
 #' @seealso \code{\link{phyloSimSignal}}.
 #'
 #' @examples
-#' dontrun{
+#' \dontrun{
 #' data(navic)
 #' psim <- phyloSim(navic)
 #' plot(psim)
