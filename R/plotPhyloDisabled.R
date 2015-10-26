@@ -1,5 +1,6 @@
 # This is a slightly modified version of the function plot.phylo
-# written by Emmanuel Paradis and distributed in the ape package
+# written by Emmanuel Paradis (Copyright 2002-2014 Emmanuel Paradis)
+# and distributed in the ape package (v.3.1-4)
 # under the GNU GENERAL PUBLIC LICENSE v.2
 .plotPhyloDisabled <- function (x, type = "phylogram", use.edge.length = TRUE, node.pos = NULL, 
                                show.tip.label = TRUE, show.node.label = FALSE, edge.color = "black", 
