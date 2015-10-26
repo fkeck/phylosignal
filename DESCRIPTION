@@ -15,5 +15,9 @@ Imports:
     phylobase,
     boot,
     RCurl,
-    graphics
+    graphics,
+    grDevices,
+    methods,
+    stats,
+    utils
 LinkingTo: Rcpp, RcppArmadillo
