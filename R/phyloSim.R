@@ -24,10 +24,12 @@
 #' @seealso \code{\link{phyloSimSignal}}.
 #'
 #' @examples
+#' dontrun{
 #' data(navic)
 #' psim <- phyloSim(navic)
 #' plot(psim)
 #' plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
+#'}
 #'
 #' @export
 phyloSim <- function(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
@@ -98,10 +100,10 @@ phyloSim <- function(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.st
 #'}
 #'@method plot phylosim
 #'@export
-plot.phylosim <- function(x, what=c("stat", "pval"), stacked.methods=FALSE,
-                          quantiles=c(0.05, 0.95), col=1:5, legend=TRUE, ...){
+plot.phylosim <- function(x, what = c("stat", "pval"), stacked.methods = FALSE,
+                          quantiles = c(0.05, 0.95), col = 1:5, legend = TRUE, ...){
   what <- match.arg(what)
-  if(what=="stat"){
+  if(what == "stat"){
     sim.stat <- x$sim.stat
     nstat <- dim(sim.stat)[2]
     
