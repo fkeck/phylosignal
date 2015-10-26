@@ -90,11 +90,12 @@ phyloSim <- function(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.st
 #'@seealso \code{\link{phyloSim}}.
 #'
 #' @examples
+#' \dontrun{
 #' data(navic)
 #' psim <- phyloSim(navic)
 #' plot(psim)
 #' plot.phylosim(psim, what = "pval", stacked.methods = TRUE)
-#'
+#'}
 #'@method plot phylosim
 #'@export
 plot.phylosim <- function(x, what=c("stat", "pval"), stacked.methods=FALSE,
