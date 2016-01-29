@@ -116,22 +116,12 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
 lambdaTest <- function(x, vcv){
   lambda.max <- max(vcv)/max(vcv[lower.tri(vcv)])
   opt <- suppressWarnings(
-    tryCatch(
-      optimize(pagelLogLik, interval=c(0, lambda.max), xr = x, vcvr = vcv, maximum = TRUE),
-             warning = function(w) return(list(maximum = NA, objective = NA))
-      )
+      optimize(pagelLogLik, interval=c(0, lambda.max), xr = x, vcvr = vcv, maximum = TRUE)
     )
   Lambda <- opt$maximum
-  if(is.finite(opt$objective)){
-    logL0 <- pagelLogLik(0, x, vcv)
-    if(is.finite(logL0)){
-      pvalue <- as.numeric(pchisq(2 * (opt$objective - logL0), df = 1, lower.tail = FALSE))
-    } else {
-      pvalue <- NA
-    }
-  } else {
-    pvalue <- NA
-  }
+  logL0 <- pagelLogLik(0, x, vcv)
+  pvalue <- as.numeric(pchisq(2 * (opt$objective - logL0), df = 1, lower.tail = FALSE))
+
   return(list(Lambda = Lambda, pvalue = pvalue))
 }
 

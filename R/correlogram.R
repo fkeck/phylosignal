@@ -155,7 +155,6 @@ plot.phylocorrelogram <- function(x, show.ci = TRUE, show.h0 = TRUE, show.test =
        xlim = range(x$res[, 1]),
        ylim = range(x$res[, 2:3]),
        xlab = xlab, ylab = ylab, main = main, ...)
-  #abline(h = 0, col = "grey30")
   if(show.h0){
     abline(h = h0, col = "grey30")
   }
