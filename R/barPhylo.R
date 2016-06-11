@@ -216,6 +216,10 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     
   }
   
+  if(!is.null(error.bar.inf) | !is.null(error.bar.sup)){
+    error.bar.col <- .orderGrArg(error.bar.col, n.tips = n.tips, n.traits = n.traits,
+                           new.order = new.order, tips = tips, default = 1)
+  }
 
   if(is.null(tip.labels)){
     tip.labels <- tips
