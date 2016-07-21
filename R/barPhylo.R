@@ -2,7 +2,7 @@
 
 #' Plots of Traits Values along a Phylogeny
 #'
-#' This function provide a general interface to plot \code{phylo4d} object
+#' This function provides a general interface to plot \code{phylo4d} object
 #' (i.e. phylogenetic tree and data).
 #' 
 #' @param p4d a \code{phylo4d} object.
@@ -148,36 +148,36 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       data.xlim <- matrix(rep(NA, n.traits * 2), nrow = 2,
                          dimnames = list(c("xlim.min", "xlim.max"), trait))
       if(!is.null(error.bar.inf) & !is.null(error.bar.sup)){
-        data.xlim[1, ] <- floor(min(arrow.inf, arrow.sup))
-        data.xlim[2, ] <- ceiling(max(arrow.inf, arrow.sup))
+        data.xlim[1, ] <- floor(min(arrow.inf, arrow.sup, na.rm = TRUE))
+        data.xlim[2, ] <- ceiling(max(arrow.inf, arrow.sup, na.rm = TRUE))
       } else if(!is.null(error.bar.inf)){
-        data.xlim[1, ] <- floor(min(arrow.inf))
-        data.xlim[2, ] <- ceiling(max(arrow.inf))
+        data.xlim[1, ] <- floor(min(arrow.inf, na.rm = TRUE))
+        data.xlim[2, ] <- ceiling(max(arrow.inf, na.rm = TRUE))
       } else if(!is.null(error.bar.sup)){
-        data.xlim[1, ] <- floor(min(arrow.sup))
-        data.xlim[2, ] <- ceiling(max(arrow.sup))
+        data.xlim[1, ] <- floor(min(arrow.sup, na.rm = TRUE))
+        data.xlim[2, ] <- ceiling(max(arrow.sup, na.rm = TRUE))
       } else {
-        data.xlim[1, ] <- floor(min(X))
-        data.xlim[2, ] <- ceiling(max(X))
+        data.xlim[1, ] <- floor(min(X, na.rm = TRUE))
+        data.xlim[2, ] <- ceiling(max(X, na.rm = TRUE))
       }
     } else {
       data.xlim <- matrix(NA, nrow = 2, ncol = n.traits,
                          dimnames = list(c("xlim.min", "xlim.max"), trait))
-      data.xlim[1, ] <- apply(X, 2, min)
-      data.xlim[1, apply(X, 2, min) * apply(X, 2, max) > 0 & apply(X, 2, min) > 0] <- 0
-      data.xlim[2, ] <- apply(X, 2, max)
-      data.xlim[2, apply(X, 2, min) * apply(X, 2, max) > 0 & apply(X, 2, max) < 0] <- 0
+      data.xlim[1, ] <- apply(X, 2, min, na.rm = TRUE)
+      data.xlim[1, apply(X, 2, min, na.rm = TRUE) * apply(X, 2, max, na.rm = TRUE) > 0 & apply(X, 2, min, na.rm = TRUE) > 0] <- 0
+      data.xlim[2, ] <- apply(X, 2, max, na.rm = TRUE)
+      data.xlim[2, apply(X, 2, min, na.rm = TRUE) * apply(X, 2, max, na.rm = TRUE) > 0 & apply(X, 2, max, na.rm = TRUE) < 0] <- 0
       if(!is.null(error.bar.inf) & !is.null(error.bar.sup)){
-        data.xlim[1, ] <- apply(cbind(apply(arrow.inf, 2, min), apply(arrow.sup, 2, min)), 1, min)
-        data.xlim[2, ] <- apply(cbind(apply(arrow.inf, 2, max), apply(arrow.sup, 2, max)), 1, max)
+        data.xlim[1, ] <- apply(cbind(apply(arrow.inf, 2, min, na.rm = TRUE), apply(arrow.sup, 2, min)), 1, min, na.rm = TRUE)
+        data.xlim[2, ] <- apply(cbind(apply(arrow.inf, 2, max, na.rm = TRUE), apply(arrow.sup, 2, max)), 1, max, na.rm = TRUE)
       } else {
         if(!is.null(error.bar.inf)){
-          data.xlim[1, ] <- apply(cbind(apply(arrow.inf, 2, min), data.xlim[1, ]), 1, min)
-          data.xlim[2, ] <- apply(cbind(apply(arrow.inf, 2, max), data.xlim[2, ]), 1, max)
+          data.xlim[1, ] <- apply(cbind(apply(arrow.inf, 2, min, na.rm = TRUE), data.xlim[1, ]), 1, min, na.rm = TRUE)
+          data.xlim[2, ] <- apply(cbind(apply(arrow.inf, 2, max, na.rm = TRUE), data.xlim[2, ]), 1, max, na.rm = TRUE)
         }
         if(!is.null(error.bar.sup)){
-          data.xlim[1, ] <- apply(cbind(apply(arrow.sup, 2, min), data.xlim[1, ]), 1, min)
-          data.xlim[2, ] <- apply(cbind(apply(arrow.sup, 2, max), data.xlim[2, ]), 1, max)
+          data.xlim[1, ] <- apply(cbind(apply(arrow.sup, 2, min, na.rm = TRUE), data.xlim[1, ]), 1, min, na.rm = TRUE)
+          data.xlim[2, ] <- apply(cbind(apply(arrow.sup, 2, max, na.rm = TRUE), data.xlim[2, ]), 1, max, na.rm = TRUE)
         }
       }
     }
