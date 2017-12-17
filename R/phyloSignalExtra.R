@@ -102,7 +102,7 @@ phyloSignalINT <- function(p4d, trait = names(tipData(p4d))[1], method = "Cmean"
   rownames(new.data) <- int.nodes
   
   for(i in int.nodes){
-    p4d.i <- subset(p4d, node.subtree = i)
+    p4d.i <- phylobase::subset(p4d, node.subtree = i)
     signal.i <- phyloSignal(p4d.i, methods = method, reps = reps, W = W)
     new.data[as.character(i), 1] <- signal.i$stat[trait, method]
     new.data[as.character(i), 2] <- signal.i$pvalue[trait, method]
