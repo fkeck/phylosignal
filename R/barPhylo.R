@@ -765,6 +765,7 @@ focusTraits <- function(x){
   layout(lp$layout)
   par(mar = c(5, 1, 4, 0))
   fig <- unlist(lp$fig.traits[x])
+  fig[fig < 0] <- 0
   par(fig = fig)
   plot.window(xlim = lp$data.xlim[, x], ylim = lp$ylim)
 }
@@ -778,6 +779,7 @@ focusTree <- function(){
   layout(lp$layout)
   par(mar = c(5, 1, 4, 0))
   fig <- unlist(lp$fig.tree)
+  fig[fig < 0] <- 0
   par(fig = fig)
   plot.window(xlim = lp$tree.xlim, ylim = lp$ylim)
 }
@@ -794,6 +796,7 @@ focusTips <- function(){
     layout(lp$layout)
     par(mar = c(5, 1, 4, 0))
     fig <- unlist(lp$fig.tip)
+    fig[fig < 0] <- 0
     par(fig = fig)
     plot.window(xlim = lp$tip.xlim, ylim = lp$ylim)
   }
