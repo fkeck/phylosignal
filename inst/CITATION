@@ -1,0 +1,21 @@
+citHeader("To cite phylosignal in publications use:")
+
+citEntry(entry="Article",
+         title = "phylosignal: an R package to measure, test, and explore the phylogenetic signal",
+         author = c(person("Francois", "Keck"),
+                    person("Frederic", "Rimet"),
+                    person("Agnes", "Bouchez"),
+                    person("Alain", "Franc")),
+         journal      = "Ecology and Evolution",
+         year         = "2016",
+	 volume       = "6",
+	 number       = "9",
+	 pages        = "2774--2780",
+         doi          = "10.1002/ece3.2051",
+         
+         textVersion = 
+         paste("Keck F., Rimet F., Bouchez A., and Franc A. (2016).", 
+               "phylosignal: an R package to measure, test, and explore the phylogenetic signal.",
+               "Ecology and Evolution, 6(9), 2774-2780.",
+	       "doi:10.1002/ece3.2051")
+)
