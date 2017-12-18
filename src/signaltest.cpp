@@ -167,8 +167,12 @@ double pagelLogLik(double lambda, NumericVector xr, NumericMatrix vcvr){
       arma::colvec xa = x - a;
       arma::rowvec xat = arma::trans(xa);
       double s = as_scalar(xat * vcvLInv * xa) / n;
-      double logLik = as_scalar(-xat * (1/s * vcvLInv) * xa) / 2 - n * log(2 * pi)/2 - log(arma::det(s * vcvL)) / 2;
-
+      double logdetval;
+      double logdetsign;
+      arma::log_det(logdetval, logdetsign, s * vcvL);
+      
+      double logLik = as_scalar(-xat * (1/s * vcvLInv) * xa) / 2 - n * log(2 * pi)/2 - logdetval / 2;
+      
       return logLik;
       
 }
