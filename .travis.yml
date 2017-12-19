@@ -1,8 +1,6 @@
 # http://docs.travis-ci.com/user/languages/r/
 language: r
 
-group: deprecated-2017Q4
-
 sudo: required
 warnings_are_errors: true
 
@@ -16,6 +14,7 @@ global:
 before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
 
 r_binary_packages:
+- DBI
 - ade4
 - ape
 - chron
