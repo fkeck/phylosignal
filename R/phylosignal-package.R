@@ -1,19 +1,19 @@
 #' phylosignal
 #' 
 #' @useDynLib phylosignal
-#' @importFrom Rcpp evalCpp
-#' @exportPattern "^[[:alpha:]]+"
-#' @import adephylo
-#' @import ape
-#' @import RCurl
+#' @import DBI
 #' @import grDevices
 #' @import graphics
 #' @import methods
 #' @import stats
 #' @import utils
-#' @importFrom phylobase phylo4d extractTree tdata tipLabels tipData nTips nNodes nodeData<- nodeData
 #' @importFrom boot boot boot.ci
+#' @importFrom Rcpp evalCpp
+#' @exportPattern "^[[:alpha:]]+"
+#' @importFrom ape vcv.phylo node.height node.depth.edgelength unrooted.xy .PlotPhyloEnv extract.clade ladderize plot.phylo rTraitCont read.tree read.nexus
+#' @importFrom phylobase phylo4d extractTree tdata tipLabels tipData nTips nNodes nodeData<- nodeData
 #' @importFrom igraph graph.adjacency decompose.graph V graph.density clusters degree plot.igraph
+#' @importFrom adephylo proxTips distTips
 #' 
 #' @name phylosignal
 #' @docType package

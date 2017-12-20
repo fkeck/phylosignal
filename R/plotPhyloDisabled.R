@@ -109,8 +109,8 @@
       yy <- r * sin(theta)
     }, unrooted = {
       nb.sp <- node.depth(x)
-      XY <- if (use.edge.length) unrooted.xy(Ntip, Nnode, 
-                                             z$edge, z$edge.length, nb.sp, rotate.tree) else unrooted.xy(Ntip, 
+      XY <- if (use.edge.length) ape::unrooted.xy(Ntip, Nnode, 
+                                             z$edge, z$edge.length, nb.sp, rotate.tree) else ape::unrooted.xy(Ntip, 
                                                                                                          Nnode, z$edge, rep(1, Nedge), nb.sp, rotate.tree)
       xx <- XY$M[, 1] - min(XY$M[, 1])
       yy <- XY$M[, 2] - min(XY$M[, 2])
@@ -269,6 +269,6 @@
             x.lim = x.lim, y.lim = y.lim, direction = direction, 
             tip.color = tip.color, Ntip = Ntip, Nnode = Nnode)
   assign("last_plot.phylo", c(L, list(edge = xe, xx = xx, yy = yy)), 
-         envir = .PlotPhyloEnv)
+         envir = ape::.PlotPhyloEnv)
   return(L)
 }

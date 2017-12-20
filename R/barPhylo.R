@@ -100,7 +100,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                      grid.lty = "dashed", ...){
 
                       
-  p4 <- extractTree(p4d)
+  p4 <- phylobase::extractTree(p4d)
   phy <- as(p4, "phylo")
   if(tree.ladderize){
     phy <- ladderize(phy)
@@ -396,7 +396,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                                    data.xlim = data.xlim,
                                    tip.xlim = tip.xlim,
                                    ylim = ylim, par.mar0 = par.mar0), 
-           envir = .PlotPhyloEnv)
+           envir = ape::.PlotPhyloEnv)
     layout(1)
   }
   
@@ -415,7 +415,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     plot.phylo(phy, type = tree.type, show.tip.label = FALSE,
                x.lim = tree.xlim * (1/tree.ratio), y.lim = NULL,
                no.margin = TRUE, open.angle = tree.open.angle, rotate.tree = 0, ...)
-    lp <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+    lp <- get("last_plot.phylo", envir = ape::.PlotPhyloEnv)
         
     length.phylo <- max(sqrt(lp$xx^2 + lp$yy^2))
     if(show.tip){
@@ -756,7 +756,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
 #'@rdname focus
 #'@export
 focusTraits <- function(x){
-  lp <- get("last_barplotp4d", envir = .PlotPhyloEnv)
+  lp <- get("last_barplotp4d", envir = ape::.PlotPhyloEnv)
   if(lp$plot.type == "gridplot"){
     x <- 1
   }
@@ -773,7 +773,7 @@ focusTraits <- function(x){
 #'@rdname focus
 #'@export
 focusTree <- function(){
-  lp <- get("last_barplotp4d", envir = .PlotPhyloEnv)
+  lp <- get("last_barplotp4d", envir = ape::.PlotPhyloEnv)
   par(new = TRUE)
   plot.new()
   layout(lp$layout)
@@ -787,7 +787,7 @@ focusTree <- function(){
 #'@rdname focus
 #'@export
 focusTips <- function(){
-  lp <- get("last_barplotp4d", envir = .PlotPhyloEnv)
+  lp <- get("last_barplotp4d", envir = ape::.PlotPhyloEnv)
   if(!lp$show.tip){
     stop("No tip labels on the figure")
   } else {
@@ -805,7 +805,7 @@ focusTips <- function(){
 #'@rdname focus
 #'@export
 focusStop <- function(){
-  lp <- get("last_barplotp4d", envir = .PlotPhyloEnv)
+  lp <- get("last_barplotp4d", envir = ape::.PlotPhyloEnv)
   layout(1)
   par(mar = lp$par.mar0)
 }

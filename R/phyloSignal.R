@@ -46,7 +46,7 @@
 #' @export
 phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"), reps = 999, W = NULL){
   methods <- match.arg(methods, several.ok = TRUE)
-  p4 <- extractTree(p4d)
+  p4 <- phylobase::extractTree(p4d)
   phy <- as(p4, "phylo")
   X <- tdata(p4d, type = "tip")
   X <- as.matrix(X)
@@ -57,7 +57,7 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
   }
   
   if("Cmean" %in% methods){
-    WA <- proxTips(p4d, method = "Abouheif", useC = TRUE)
+    WA <- adephylo::proxTips(p4d, method = "Abouheif", useC = TRUE)
     tmp <- apply(X, 2, moranTest, Wr = WA, reps = reps)
     res$stat$Cmean <- unlist(sapply(tmp, "[", 1))
     res$pvalue$Cmean <- unlist(sapply(tmp, "[", 2))
@@ -65,7 +65,7 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
   
   if("I" %in% methods){
     if(is.null(W)){
-      W <- proxTips(p4d, method = "patristic", useC = TRUE)
+      W <- adephylo::proxTips(p4d, method = "patristic", useC = TRUE)
     } else {
       if(is.matrix(W)){
         W <- W[rownames(X), rownames(X)]
@@ -77,7 +77,7 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
   }
   
   if(any(c("K", "K.star", "Lambda") %in% methods)){  
-    VCV <- vcv.phylo(phy, model = "Brownian")
+    VCV <- ape::vcv.phylo(phy, model = "Brownian")
     
     if("K" %in% methods){
       tmp <- apply(X, 2, kTest, vcv = VCV, reps = reps)

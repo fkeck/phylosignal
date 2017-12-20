@@ -42,7 +42,7 @@
 lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
                  alternative = "greater", prox.phylo = "patristic", as.p4d = FALSE){
   
-  p4 <- extractTree(p4d)
+  p4 <- phylobase::extractTree(p4d)
   phy <- as(p4, "phylo")
   new.order <- phy$edge[, 2][!phy$edge[, 2] %in% phy$edge[, 1]]
   tips <- phy$tip.label[new.order]
@@ -57,7 +57,7 @@ lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
   }
   if(is.vector(prox.phylo) & is.character(prox.phylo)){
     prox.phylo <- match.arg(prox.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
-    W <- proxTips(phy, method = prox.phylo)[tips, tips]
+    W <- adephylo::proxTips(phy, method = prox.phylo)[tips, tips]
   } else {
     if(is.matrix(prox.phylo)){
       W <- prox.phylo[tips, tips]

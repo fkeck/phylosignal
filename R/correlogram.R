@@ -54,7 +54,7 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
                              dist.phylo = "patristic", sigma = NULL,
                              n.points = 100, ci.bs = 1000, ci.conf = 0.95){
   
-  p4 <- extractTree(p4d)
+  p4 <- phylobase::extractTree(p4d)
   phy <- as(p4, "phylo")
   new.order <- phy$edge[, 2][!phy$edge[, 2] %in% phy$edge[, 1]]
   tips <- phy$tip.label[new.order]
