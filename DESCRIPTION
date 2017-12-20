@@ -14,7 +14,7 @@ Imports:
     ape,
     phylobase,
     boot,
-    RCurl,
+    DBI,
     graphics,
     grDevices,
     methods,
@@ -22,3 +22,9 @@ Imports:
     utils
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: testthat
+RoxygenNote: 6.0.1
+LazyLoad: yes
+LazyData: true
+Encoding: UTF-8
+
+
