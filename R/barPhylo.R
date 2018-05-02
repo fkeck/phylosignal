@@ -77,7 +77,9 @@
 #' Columns and rows names must match with traits and tips labels, respectively.
 #' @param error.bar.inf a matrix giving the inferior limit for error bars.
 #' Columns and rows names must match with traits and tips labels, respectively.
-#' @param error.bar.col a vector of R colors to draw error bars.
+#' @param error.bar.col a vector of R colors to use for the bars.
+#' Recycled along the tips, reapeated for each trait.
+#' The user can also provide a matrix for a finer tuning (see Details)
 #' 
 #' @param show.box a logical indicating whether a box should be drawn around the plots.
 #' @param grid.vertical a logical incating whether vertical lines of the grid should be drawn.
@@ -88,18 +90,18 @@
 #'  
 #' @export
 multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, scale = TRUE, plot.type = "barplot",
-                     tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
-                     tree.open.angle = 0, tree.open.crown = TRUE,
-                     show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
-                     data.xlim = NULL, bar.lwd = 10, bar.col = "grey35", show.data.axis = TRUE,
-                     dot.col = "black", dot.pch = 20, dot.cex = 2,
-                     cell.col = white2red(100), show.color.scale = TRUE,
-                     show.trait = TRUE, trait.labels = NULL, trait.col = "black", trait.cex = 1, trait.font = 1,
-                     trait.bg.col = "grey90", error.bar.sup = NULL, error.bar.inf = NULL, error.bar.col = 1,
-                     show.box = FALSE, grid.vertical = TRUE, grid.horizontal = FALSE, grid.col = "grey25",
-                     grid.lty = "dashed", ...){
-
-                      
+                              tree.ladderize = FALSE, tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+                              tree.open.angle = 0, tree.open.crown = TRUE,
+                              show.tip = TRUE, tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
+                              data.xlim = NULL, bar.lwd = 10, bar.col = "grey35", show.data.axis = TRUE,
+                              dot.col = "black", dot.pch = 20, dot.cex = 2,
+                              cell.col = white2red(100), show.color.scale = TRUE,
+                              show.trait = TRUE, trait.labels = NULL, trait.col = "black", trait.cex = 1, trait.font = 1,
+                              trait.bg.col = "grey90", error.bar.sup = NULL, error.bar.inf = NULL, error.bar.col = 1,
+                              show.box = FALSE, grid.vertical = TRUE, grid.horizontal = FALSE, grid.col = "grey25",
+                              grid.lty = "dashed", ...){
+  
+  
   p4 <- phylobase::extractTree(p4d)
   phy <- as(p4, "phylo")
   if(tree.ladderize){
@@ -117,7 +119,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   if(is.numeric(trait)){
     trait <- names(tdata(p4d))[trait]
   }
-####
+  ####
   tree.type <- match.arg(tree.type, c("phylogram", "cladogram", "fan"))
   plot.type <- match.arg(plot.type, c("barplot", "dotplot", "gridplot"))
   
@@ -146,7 +148,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   if(is.null(data.xlim)){
     if(center & scale){
       data.xlim <- matrix(rep(NA, n.traits * 2), nrow = 2,
-                         dimnames = list(c("xlim.min", "xlim.max"), trait))
+                          dimnames = list(c("xlim.min", "xlim.max"), trait))
       if(!is.null(error.bar.inf) & !is.null(error.bar.sup)){
         data.xlim[1, ] <- floor(min(arrow.inf, arrow.sup, na.rm = TRUE))
         data.xlim[2, ] <- ceiling(max(arrow.inf, arrow.sup, na.rm = TRUE))
@@ -162,7 +164,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       }
     } else {
       data.xlim <- matrix(NA, nrow = 2, ncol = n.traits,
-                         dimnames = list(c("xlim.min", "xlim.max"), trait))
+                          dimnames = list(c("xlim.min", "xlim.max"), trait))
       data.xlim[1, ] <- apply(X, 2, min, na.rm = TRUE)
       data.xlim[1, apply(X, 2, min, na.rm = TRUE) * apply(X, 2, max, na.rm = TRUE) > 0 & apply(X, 2, min, na.rm = TRUE) > 0] <- 0
       data.xlim[2, ] <- apply(X, 2, max, na.rm = TRUE)
@@ -183,7 +185,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     }
   } else if(is.vector(data.xlim) & length(data.xlim) == 2){
     data.xlim <- matrix(rep(data.xlim, n.traits), nrow = 2,
-                       dimnames = list(c("xlim.min", "xlim.max"), trait))
+                        dimnames = list(c("xlim.min", "xlim.max"), trait))
   } else if(is.matrix(data.xlim)){
     if(isTRUE(all.equal(dim(data.xlim), c(2, n.traits)))){
       rownames(data.xlim) <- c("xlim.min", "xlim.max")
@@ -195,45 +197,45 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     stop("Invalid 'data.xlim' argument")
   }
   
-
+  
   ylim <- c(1, n.tips)
   
   if(plot.type == "barplot"){
     bar.col <- .orderGrArg(bar.col, n.tips = n.tips, n.traits = n.traits,
-                          new.order = new.order, tips = tips, default = "grey35")
+                           new.order = new.order, tips = tips, default = "grey35")
   }
   
   if(plot.type == "dotplot"){
-
+    
     dot.col <- .orderGrArg(dot.col, n.tips = n.tips, n.traits = n.traits,
-                          new.order = new.order, tips = tips, default = 1)
+                           new.order = new.order, tips = tips, default = 1)
     
     dot.pch <- .orderGrArg(dot.pch, n.tips = n.tips, n.traits = n.traits,
-                          new.order = new.order, tips = tips, default = 1)
+                           new.order = new.order, tips = tips, default = 1)
     
     dot.cex <- .orderGrArg(dot.cex, n.tips = n.tips, n.traits = n.traits,
-                          new.order = new.order, tips = tips, default = 1)
+                           new.order = new.order, tips = tips, default = 1)
     
   }
   
   if(!is.null(error.bar.inf) | !is.null(error.bar.sup)){
     error.bar.col <- .orderGrArg(error.bar.col, n.tips = n.tips, n.traits = n.traits,
-                           new.order = new.order, tips = tips, default = 1)
+                                 new.order = new.order, tips = tips, default = 1)
   }
-
+  
   if(is.null(tip.labels)){
     tip.labels <- tips
   } else {
     tip.labels <- .orderGrArg(tip.labels, n.tips = n.tips, n.traits = n.traits,
-                             new.order = new.order, tips = tips, default = "")
+                              new.order = new.order, tips = tips, default = "")
   }
   tip.col <- .orderGrArg(tip.col, n.tips = n.tips, n.traits = n.traits,
-                        new.order = new.order, tips = tips, default = 1)
+                         new.order = new.order, tips = tips, default = 1)
   tip.cex <- .orderGrArg(tip.cex, n.tips = n.tips, n.traits = n.traits,
-                        new.order = new.order, tips = tips, default = 1)
+                         new.order = new.order, tips = tips, default = 1)
   tip.font <- .orderGrArg(tip.font, n.tips = n.tips, n.traits = n.traits,
-                         new.order = new.order, tips = tips, default = 3)
-
+                          new.order = new.order, tips = tips, default = 3)
+  
   
   
   if(is.null(trait.labels)){
@@ -247,10 +249,10 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
   
   if(is.null(tree.xlim)){
     tree.xlim <- .plotPhyloDisabled(phy, type = tree.type,
-                                   show.tip.label = FALSE,
-                                   x.lim = NULL, y.lim = NULL,
-                                   no.margin = FALSE, direction = "rightwards",
-                                   plot = FALSE, ...)$x.lim
+                                    show.tip.label = FALSE,
+                                    x.lim = NULL, y.lim = NULL,
+                                    no.margin = FALSE, direction = "rightwards",
+                                    plot = FALSE, ...)$x.lim
   }
   
   ###
@@ -302,11 +304,11 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         options(warn = -1)
         if(!is.null(error.bar.inf)){
           arrows(x0 = X[, i], x1 = arrow.inf[, i], y0 = 1:n.tips,
-                 lwd = 1, col = error.bar.col, angle = 90, length = 0.04)
+                 lwd = 1, col = error.bar.col[, i], angle = 90, length = 0.04)
         }
         if(!is.null(error.bar.sup)){
-            arrows(x0 = X[, i], x1 = arrow.sup[, i], y0 = 1:n.tips,
-                 lwd = 1, col = error.bar.col, angle = 90, length = 0.04)
+          arrows(x0 = X[, i], x1 = arrow.sup[, i], y0 = 1:n.tips,
+                 lwd = 1, col = error.bar.col[, i], angle = 90, length = 0.04)
         }
         options(warn = 1)
         if(show.data.axis){
@@ -341,7 +343,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       if(grid.vertical){
         abline(v = seq(1, n.traits - 1), col = grid.col, lty = grid.lty)
       }
-  
+      
       if(show.trait){
         mtext(trait.labels, at = seq(0.5, (n.traits - 0.5)),
               side = 1, line = 1, las = par("las"),
@@ -400,7 +402,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
     layout(1)
   }
   
-
+  
   if(tree.type == "fan"){
     
     par(lend = 1)
@@ -416,7 +418,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                x.lim = tree.xlim * (1/tree.ratio), y.lim = NULL,
                no.margin = TRUE, open.angle = tree.open.angle, rotate.tree = 0, ...)
     lp <- get("last_plot.phylo", envir = ape::.PlotPhyloEnv)
-        
+    
     length.phylo <- max(sqrt(lp$xx^2 + lp$yy^2))
     if(show.tip){
       length.gr0 <- (min(par("usr")[2] - par("usr")[1], par("usr")[4] - par("usr")[3]) / 2 - length.phylo) / (n.traits+1)
@@ -469,10 +471,10 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
       }
       
       # FOR BARPLOT AND DOTPLOT
-        # Baseline and Values
+      # Baseline and Values
       if(plot.type == "barplot" | plot.type == "dotplot"){
         length.baseline <- (length.phylo + length.intergr*i + length.gr*(i-1) +
-                            ifelse(min(data.xlim.scale) < 0, abs(min(data.xlim.scale)), 0))
+                              ifelse(min(data.xlim.scale) < 0, abs(min(data.xlim.scale)), 0))
         length.baseline <- rep(length.baseline, n.tips)
         length.values <- length.baseline + X.scale
         if(!is.null(error.bar.inf)){
@@ -485,7 +487,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         # Draw Baseline
         length.baseline <- rep(length.baseline, length.out = length(cos.tsoft))
         lines(length.baseline * cos.tsoft, length.baseline * sin.tsoft, lwd = 1)
-      
+        
         #Grid Species
         if(grid.horizontal){
           segments(x0 = length.ring1 * cos.t,
@@ -494,7 +496,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                    y1 = length.ring2 * sin.t,
                    col = grid.col, lty = grid.lty)
         }
-      
+        
         # Axis and circular grid
         if((show.data.axis | grid.vertical)){
           if(tree.open.crown){
@@ -615,7 +617,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                  x1 = length.arrow.inf * cos.t,
                  y0 = length.values * sin.t,
                  y1 = length.arrow.inf * sin.t,
-                 lwd = 1, col = error.bar.col,
+                 lwd = 1, col = error.bar.col[, i],
                  angle = 90, length = 0.04)
         }
         
@@ -624,7 +626,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                  x1 = length.arrow.sup * cos.t,
                  y0 = length.values * sin.t,
                  y1 = length.arrow.sup * sin.t,
-                 lwd = 1, col = error.bar.col,
+                 lwd = 1, col = error.bar.col[, i],
                  angle = 90, length = 0.04)
         }
         options(warn = 1)
@@ -639,7 +641,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
           lines(xx2, yy2, col = 1)          
         } 
       }
-    
+      
       # TRAITS LABELS
       if(show.trait){
         if(tree.open.crown){
@@ -686,7 +688,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
              adj = ifelse(theta[i] > 0 | theta[i] < -pi, 0, 1), 
              col = tip.col[i], cex = tip.cex[i], font = tip.font[i],
              srt = ifelse(theta[i] > 0 | theta[i] < -pi, 
-                         (pi/2 - theta[i]) * 180 /pi, (-pi/2 - theta[i]) * 180 /pi))
+                          (pi/2 - theta[i]) * 180 /pi, (-pi/2 - theta[i]) * 180 /pi))
       }
     }
     
