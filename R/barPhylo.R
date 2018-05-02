@@ -77,7 +77,9 @@
 #' Columns and rows names must match with traits and tips labels, respectively.
 #' @param error.bar.inf a matrix giving the inferior limit for error bars.
 #' Columns and rows names must match with traits and tips labels, respectively.
-#' @param error.bar.col a vector of R colors to draw error bars.
+#' @param error.bar.col a vector of R colors to use for the bars.
+#' Recycled along the tips, reapeated for each trait.
+#' The user can also provide a matrix for a finer tuning (see Details)
 #' 
 #' @param show.box a logical indicating whether a box should be drawn around the plots.
 #' @param grid.vertical a logical incating whether vertical lines of the grid should be drawn.
@@ -302,11 +304,11 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
         options(warn = -1)
         if(!is.null(error.bar.inf)){
           arrows(x0 = X[, i], x1 = arrow.inf[, i], y0 = 1:n.tips,
-                 lwd = 1, col = error.bar.col[,i], angle = 90, length = 0.04)
+                 lwd = 1, col = error.bar.col[, i], angle = 90, length = 0.04)
         }
         if(!is.null(error.bar.sup)){
           arrows(x0 = X[, i], x1 = arrow.sup[, i], y0 = 1:n.tips,
-                 lwd = 1, col = error.bar.col[,i], angle = 90, length = 0.04)
+                 lwd = 1, col = error.bar.col[, i], angle = 90, length = 0.04)
         }
         options(warn = 1)
         if(show.data.axis){
@@ -615,7 +617,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                  x1 = length.arrow.inf * cos.t,
                  y0 = length.values * sin.t,
                  y1 = length.arrow.inf * sin.t,
-                 lwd = 1, col = error.bar.col[,i],
+                 lwd = 1, col = error.bar.col[, i],
                  angle = 90, length = 0.04)
         }
         
@@ -624,7 +626,7 @@ multiplot.phylo4d <- function(p4d, trait = names(tdata(p4d)), center = TRUE, sca
                  x1 = length.arrow.sup * cos.t,
                  y0 = length.values * sin.t,
                  y1 = length.arrow.sup * sin.t,
-                 lwd = 1, col = error.bar.col[,i],
+                 lwd = 1, col = error.bar.col[, i],
                  angle = 90, length = 0.04)
         }
         options(warn = 1)
