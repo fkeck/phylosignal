@@ -81,6 +81,7 @@ lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
     }
     
     alternative <- match.arg(alternative, c("two-sided", "greater", "less"))
+    rank <- matrix(ncol = n.traits, nrow = n.tips, dimnames = list(tips, trait))
     p.value <- matrix(ncol = n.traits, nrow = n.tips, dimnames = list(tips, trait))
 
     for(i in 1:n.tips){
@@ -100,6 +101,7 @@ lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
         if(alternative == "less"){
           p.value[i, j] <- (sum(lipa.perm[i, j, ] <= lipa[i, j]) + 1)/(reps + 1)
         }
+        rank[i, j] <- rank(c(lipa[i, j], lipa.perm[i, j, ]))[1]
       }
     }
   }
@@ -108,7 +110,7 @@ lipaMoran <- function(p4d, trait = names(tdata(p4d)), reps=999,
     res <- phylo4d(phy, lipa)
   } else {
     if(reps > 0){
-      res <- list(lipa = lipa, p.value = p.value, reps = reps, alternative = alternative)
+      res <- list(lipa = lipa, rank = rank, p.value = p.value, reps = reps, alternative = alternative)
     } else {
       res <- lipa
     }
