@@ -118,7 +118,9 @@ Columns and rows names must match with traits and tips labels, respectively.}
 \item{error.bar.inf}{a matrix giving the inferior limit for error bars.
 Columns and rows names must match with traits and tips labels, respectively.}
 
-\item{error.bar.col}{a vector of R colors to draw error bars.}
+\item{error.bar.col}{a vector of R colors to use for the bars.
+Recycled along the tips, reapeated for each trait.
+The user can also provide a matrix for a finer tuning (see Details)}
 
 \item{show.box}{a logical indicating whether a box should be drawn around the plots.}
 
