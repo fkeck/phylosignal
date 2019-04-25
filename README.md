@@ -1,4 +1,4 @@
-<img src="man/figures/phylosignal.png" width="120" align="right" />
+<img src="man/figures/phylosignal.png" width="180" align="right" />
 
 # phylosignal
 
