@@ -1,3 +1,5 @@
+<img src="man/figures/phylosignal.png" width="120" align="right" />
+
 # phylosignal
 
 [![Build Status](https://travis-ci.org/fkeck/phylosignal.png?branch=master)](https://travis-ci.org/fkeck/phylosignal)
