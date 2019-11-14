@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/fkeck/phylosignal.png?branch=master)](https://travis-ci.org/fkeck/phylosignal)
 [![DOI](https://zenodo.org/badge/17973/fkeck/phylosignal.svg)](https://zenodo.org/badge/latestdoi/17973/fkeck/phylosignal)
-<br/><br/>
+<br/>
 [![CRAN](https://www.r-pkg.org/badges/version/phylosignal)](https://cran.r-project.org/web/packages/phylosignal)
 ![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/phylosignal)
 
