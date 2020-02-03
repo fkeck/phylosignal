@@ -4,8 +4,8 @@
 \alias{phyloSignal}
 \title{Computes phylogenetic signal with different methods}
 \usage{
-phyloSignal(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
-  reps = 999, W = NULL)
+phyloSignal(p4d, methods = c("all", "I", "Cmean", "Lambda", "K",
+  "K.star"), reps = 999, W = NULL)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

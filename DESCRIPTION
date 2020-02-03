@@ -24,7 +24,7 @@ LinkingTo: Rcpp, RcppArmadillo
 Suggests: testthat,
     knitr,
     rmarkdown
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 LazyLoad: yes
 LazyData: true
 Encoding: UTF-8

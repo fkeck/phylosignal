@@ -4,8 +4,8 @@
 \alias{phyloSignalBS}
 \title{Computes phylogenetic signal for bootstrapped replicates of a phylogeny.}
 \usage{
-phyloSignalBS(p4d, multiphylo, methods = c("all", "I", "Cmean", "Lambda", "K",
-  "K.star"), reps = 999, W = NULL, pb = TRUE)
+phyloSignalBS(p4d, multiphylo, methods = c("all", "I", "Cmean", "Lambda",
+  "K", "K.star"), reps = 999, W = NULL, pb = TRUE)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

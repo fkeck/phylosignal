@@ -4,8 +4,8 @@
 \alias{phyloWeights}
 \title{Phylogenetic weights matrix}
 \usage{
-phyloWeights(tree, dist.phylo = "patristic", method = "lag-norm", mu = 0,
-  sigma = 5, dmax = 10, alpha = 1, beta = 1)
+phyloWeights(tree, dist.phylo = "patristic", method = "lag-norm",
+  mu = 0, sigma = 5, dmax = 10, alpha = 1, beta = 1)
 }
 \arguments{
 \item{tree}{a \code{phylo}, \code{phylo4} or \code{phylo4d} object.}

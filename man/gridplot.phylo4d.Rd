@@ -4,16 +4,16 @@
 \alias{gridplot.phylo4d}
 \title{Gridplot of Traits Values along a Phylogeny}
 \usage{
-\method{gridplot}{phylo4d}(p4d, trait = names(tdata(p4d)), center = TRUE,
-  scale = TRUE, tree.ladderize = FALSE, tree.type = "phylogram",
-  tree.ratio = NULL, tree.xlim = NULL, tree.open.angle = 0,
-  tree.open.crown = TRUE, show.tip = TRUE, tip.labels = NULL,
-  tip.col = "black", tip.cex = 1, tip.font = 3, tip.adj = 0,
-  cell.col = white2red(100), show.color.scale = TRUE, show.trait = TRUE,
-  trait.labels = NULL, trait.col = "black", trait.cex = 0.7,
-  trait.font = 1, trait.bg.col = "grey90", show.box = FALSE,
-  grid.vertical = FALSE, grid.horizontal = FALSE, grid.col = "grey25",
-  grid.lty = "dashed", ...)
+\method{gridplot}{phylo4d}(p4d, trait = names(tdata(p4d)),
+  center = TRUE, scale = TRUE, tree.ladderize = FALSE,
+  tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
+  tree.open.angle = 0, tree.open.crown = TRUE, show.tip = TRUE,
+  tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3,
+  tip.adj = 0, cell.col = white2red(100), show.color.scale = TRUE,
+  show.trait = TRUE, trait.labels = NULL, trait.col = "black",
+  trait.cex = 0.7, trait.font = 1, trait.bg.col = "grey90",
+  show.box = FALSE, grid.vertical = FALSE, grid.horizontal = FALSE,
+  grid.col = "grey25", grid.lty = "dashed", ...)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

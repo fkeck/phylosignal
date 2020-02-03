@@ -12,9 +12,10 @@
   tip.adj = 0, data.xlim = NULL, bar.lwd = 10, bar.col = "grey35",
   show.data.axis = TRUE, show.trait = TRUE, trait.labels = NULL,
   trait.col = "black", trait.cex = 1, trait.font = 1,
-  trait.bg.col = "grey90", error.bar.sup = NULL, error.bar.inf = NULL,
-  error.bar.col = 1, show.box = FALSE, grid.vertical = TRUE,
-  grid.horizontal = FALSE, grid.col = "grey25", grid.lty = "dashed", ...)
+  trait.bg.col = "grey90", error.bar.sup = NULL,
+  error.bar.inf = NULL, error.bar.col = 1, show.box = FALSE,
+  grid.vertical = TRUE, grid.horizontal = FALSE, grid.col = "grey25",
+  grid.lty = "dashed", ...)
 }
 \arguments{
 \item{height}{a \code{phylo4d} object.}
