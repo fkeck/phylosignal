@@ -1,6 +1,5 @@
-citHeader("To cite phylosignal in publications use:")
-
-citEntry(entry="Article",
+bibentry(header = "To cite phylosignal in publications please use:",
+         "Article",
          title = "phylosignal: an R package to measure, test, and explore the phylogenetic signal",
          author = c(person("Francois", "Keck"),
                     person("Frederic", "Rimet"),
@@ -8,9 +7,9 @@ citEntry(entry="Article",
                     person("Alain", "Franc")),
          journal      = "Ecology and Evolution",
          year         = "2016",
-	 volume       = "6",
-	 number       = "9",
-	 pages        = "2774--2780",
+	       volume       = "6",
+	       number       = "9",
+	       pages        = "2774--2780",
          doi          = "10.1002/ece3.2051",
          
          textVersion = 
