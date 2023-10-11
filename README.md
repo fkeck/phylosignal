@@ -12,9 +12,9 @@
   
 ## Install
 
-To install the package you can use devtools:
+To install the package you can use remotes:
 
-    devtools::install_github("fkeck/phylosignal")
+    remotes::install_github("fkeck/phylosignal")
 
 ## Getting started
 A quick overview of the package [link](http://www.francoiskeck.fr/phylosignal/demo_general.html)
