@@ -3,3 +3,4 @@
 ^\.Rproj \(2\)\.user$
 ignore
 ^\.travis\.yml$
+^\.github$

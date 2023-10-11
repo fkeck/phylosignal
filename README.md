@@ -2,12 +2,14 @@
 
 # phylosignal
 
+<!-- badges: start -->
 [![DOI](https://zenodo.org/badge/17973/fkeck/phylosignal.svg)](https://zenodo.org/badge/latestdoi/17973/fkeck/phylosignal)
 <br/>
-[![Build Status](https://travis-ci.org/fkeck/phylosignal.png?branch=master)](https://travis-ci.org/fkeck/phylosignal)
+[![R-CMD-check](https://github.com/fkeck/phylosignal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fkeck/phylosignal/actions/workflows/R-CMD-check.yaml)
 [![CRAN](https://www.r-pkg.org/badges/version/phylosignal)](https://cran.r-project.org/package=phylosignal)
 ![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/phylosignal)
-
+<!-- badges: end -->
+  
 ## Install
 
 To install the package you can use devtools:
