@@ -9,3 +9,4 @@ src/*.dll
 ignore/
 inst/doc
 cran-comments.md
+CRAN-SUBMISSION
