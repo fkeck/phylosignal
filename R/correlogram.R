@@ -145,7 +145,7 @@ plot.phylocorrelogram <- function(x, show.ci = TRUE, show.h0 = TRUE, show.test =
                                   xlab = "Phylogenetic distance", ylab = "Correlation",
                                   main = "Phylogenetic correlogram", ...){
   
-  if(class(x) != "phylocorrelogram"){
+  if(!inherits(x, "phylocorrelogram")){
     stop("x must be an object of class 'phylocorrelogram'.")
   }
   

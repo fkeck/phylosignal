@@ -165,7 +165,7 @@ graphClust <- function(p4d, trait = names(tdata(p4d)),
 #' @method plot graphclust
 #' @export
 plot.graphclust <- function(x, which = c("selection", "graph", "tree"), ask = TRUE, colored = TRUE, ...){
-  if(class(x) != "graphclust"){
+  if(!inherits(x, "graphclust")){
     stop("x must be an object of class 'graphclust'")
   }
   which <- match.arg(which, c("selection", "graph", "tree"), several.ok = TRUE)
