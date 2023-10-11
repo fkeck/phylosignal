@@ -4,8 +4,14 @@
 \alias{lipaMoran}
 \title{Local Indicator of Phylogenetic Association}
 \usage{
-lipaMoran(p4d, trait = names(tdata(p4d)), reps = 999,
-  alternative = "greater", prox.phylo = "patristic", as.p4d = FALSE)
+lipaMoran(
+  p4d,
+  trait = names(tdata(p4d)),
+  reps = 999,
+  alternative = "greater",
+  prox.phylo = "patristic",
+  as.p4d = FALSE
+)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

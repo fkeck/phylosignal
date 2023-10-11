@@ -4,9 +4,16 @@
 \alias{plot.phylocorrelogram}
 \title{Plot a phylogenetic correlogram}
 \usage{
-\method{plot}{phylocorrelogram}(x, show.ci = TRUE, show.h0 = TRUE,
-  show.test = TRUE, xlab = "Phylogenetic distance",
-  ylab = "Correlation", main = "Phylogenetic correlogram", ...)
+\method{plot}{phylocorrelogram}(
+  x,
+  show.ci = TRUE,
+  show.h0 = TRUE,
+  show.test = TRUE,
+  xlab = "Phylogenetic distance",
+  ylab = "Correlation",
+  main = "Phylogenetic correlogram",
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{phylocorrelogram} object.}

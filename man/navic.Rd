@@ -4,7 +4,9 @@
 \name{navic}
 \alias{navic}
 \title{Phylogeny and pollution sensitivity of diatoms}
-\format{a \code{phylo4d} object.}
+\format{
+a \code{phylo4d} object.
+}
 \source{
 Keck F., Rimet F., Franc A. & Bouchez A. (In press) Phylogenetic signal in diatom ecology: perspectives for aquatic ecosystems biomonitoring. Ecological Applications.
 }

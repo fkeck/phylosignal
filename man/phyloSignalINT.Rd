@@ -4,8 +4,13 @@
 \alias{phyloSignalINT}
 \title{Computes phylogenetic signal at each internal node of a phylogeny}
 \usage{
-phyloSignalINT(p4d, trait = names(tipData(p4d))[1], method = "Cmean",
-  reps = 999, W = NULL)
+phyloSignalINT(
+  p4d,
+  trait = names(tipData(p4d))[1],
+  method = "Cmean",
+  reps = 999,
+  W = NULL
+)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

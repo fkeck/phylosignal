@@ -34,7 +34,7 @@ kStarTest <- function(xr, vcvr, reps) {
 #' @param xr a vector of data
 #' @param vcvr phylogenetic variance-covariance matrix
 #' 
-#' @author Adapted from Liam Revell's R function 'phylosig' {phytools}.
+#' @author Adapted from Liam Revell's R function 'phylosig' in phytools.
 pagelLogLik <- function(lambda, xr, vcvr) {
     .Call('_phylosignal_pagelLogLik', PACKAGE = 'phylosignal', lambda, xr, vcvr)
 }

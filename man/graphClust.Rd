@@ -4,10 +4,16 @@
 \alias{graphClust}
 \title{Phylogenetically constrained  clustering}
 \usage{
-graphClust(p4d, trait = names(tdata(p4d)), lim.phylo = 0.2,
-  lim.trait = 0.2, select.method = "ellipse",
-  dist.phylo = "patristic", dist.trait = "euclidean",
-  scale.lim = TRUE)
+graphClust(
+  p4d,
+  trait = names(tdata(p4d)),
+  lim.phylo = 0.2,
+  lim.trait = 0.2,
+  select.method = "ellipse",
+  dist.phylo = "patristic",
+  dist.trait = "euclidean",
+  scale.lim = TRUE
+)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

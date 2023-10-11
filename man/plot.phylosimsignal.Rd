@@ -4,9 +4,17 @@
 \alias{plot.phylosimsignal}
 \title{Plot signal estimation as a fraction of a Brownian Motion process.}
 \usage{
-\method{plot}{phylosimsignal}(x, methods = NULL, traits = NULL,
-  stacked.methods = FALSE, stacked.traits = FALSE,
-  print.quantiles = TRUE, col = 1:5, legend = TRUE, ...)
+\method{plot}{phylosimsignal}(
+  x,
+  methods = NULL,
+  traits = NULL,
+  stacked.methods = FALSE,
+  stacked.traits = FALSE,
+  print.quantiles = TRUE,
+  col = 1:5,
+  legend = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{phylosimsignal}.}

@@ -3,8 +3,4 @@
 \docType{package}
 \name{phylosignal}
 \alias{phylosignal}
-\alias{phylosignal-package}
 \title{phylosignal}
-\description{
-phylosignal
-}

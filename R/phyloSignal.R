@@ -112,7 +112,6 @@ phyloSignal <- function(p4d, methods = c("all", "I", "Cmean", "Lambda", "K", "K.
 #' @param vcv the phylogenetic variance-covariance matrix.
 #' 
 #' @details The optimization process is currently performed in R.
-#' Could be interesting to do this in Cpp and merge with code{pagelLogLik}.
 lambdaTest <- function(x, vcv){
   lambda.max <- max(vcv)/max(vcv[lower.tri(vcv)])
   opt <- suppressWarnings(

@@ -4,8 +4,7 @@
 \alias{read.p4d}
 \title{Read a phylo4d object from files}
 \usage{
-read.p4d(phylo.file, data.file, phylo.format = "newick",
-  data.format = "table")
+read.p4d(phylo.file, data.file, phylo.format = "newick", data.format = "table")
 }
 \arguments{
 \item{phylo.file}{the name of the file which the phylogenetic tree is to be read from.}

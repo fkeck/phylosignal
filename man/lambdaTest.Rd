@@ -18,5 +18,4 @@ Optimize Pagel's Lambda and do a likelihood ratio test.
 }
 \details{
 The optimization process is currently performed in R.
-Could be interesting to do this in Cpp and merge with code{pagelLogLik}.
 }

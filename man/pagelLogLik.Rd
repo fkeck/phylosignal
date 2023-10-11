@@ -17,5 +17,5 @@ pagelLogLik(lambda, xr, vcvr)
 Computes log-likelihood for data and a given value of Pagel's Lambda
 }
 \author{
-Adapted from Liam Revell's R function 'phylosig' {phytools}.
+Adapted from Liam Revell's R function 'phylosig' in phytools.
 }

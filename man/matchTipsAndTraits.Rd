@@ -4,8 +4,13 @@
 \alias{matchTipsAndTraits}
 \title{Match matrix row/col names with phylo4d tips/traits}
 \usage{
-matchTipsAndTraits(x, p4d = NULL, p4d.tips = NULL, p4d.traits = NULL,
-  subset = TRUE)
+matchTipsAndTraits(
+  x,
+  p4d = NULL,
+  p4d.tips = NULL,
+  p4d.traits = NULL,
+  subset = TRUE
+)
 }
 \arguments{
 \item{x}{a matrix of data.}

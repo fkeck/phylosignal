@@ -4,18 +4,44 @@
 \alias{dotplot.phylo4d}
 \title{Dotplot of Traits Values along a Phylogeny}
 \usage{
-\method{dotplot}{phylo4d}(p4d, trait = names(tdata(p4d)),
-  center = TRUE, scale = TRUE, tree.ladderize = FALSE,
-  tree.type = "phylogram", tree.ratio = NULL, tree.xlim = NULL,
-  tree.open.angle = 0, tree.open.crown = TRUE, show.tip = TRUE,
-  tip.labels = NULL, tip.col = "black", tip.cex = 1, tip.font = 3,
-  tip.adj = 0, data.xlim = NULL, show.data.axis = TRUE,
-  dot.col = "black", dot.pch = 20, dot.cex = 2, show.trait = TRUE,
-  trait.labels = NULL, trait.col = "black", trait.cex = 1,
-  trait.font = 1, trait.bg.col = "grey90", error.bar.sup = NULL,
-  error.bar.inf = NULL, error.bar.col = 1, show.box = FALSE,
-  grid.vertical = FALSE, grid.horizontal = TRUE, grid.col = "grey25",
-  grid.lty = "dashed", ...)
+\method{dotplot}{phylo4d}(
+  p4d,
+  trait = names(tdata(p4d)),
+  center = TRUE,
+  scale = TRUE,
+  tree.ladderize = FALSE,
+  tree.type = "phylogram",
+  tree.ratio = NULL,
+  tree.xlim = NULL,
+  tree.open.angle = 0,
+  tree.open.crown = TRUE,
+  show.tip = TRUE,
+  tip.labels = NULL,
+  tip.col = "black",
+  tip.cex = 1,
+  tip.font = 3,
+  tip.adj = 0,
+  data.xlim = NULL,
+  show.data.axis = TRUE,
+  dot.col = "black",
+  dot.pch = 20,
+  dot.cex = 2,
+  show.trait = TRUE,
+  trait.labels = NULL,
+  trait.col = "black",
+  trait.cex = 1,
+  trait.font = 1,
+  trait.bg.col = "grey90",
+  error.bar.sup = NULL,
+  error.bar.inf = NULL,
+  error.bar.col = 1,
+  show.box = FALSE,
+  grid.vertical = FALSE,
+  grid.horizontal = TRUE,
+  grid.col = "grey25",
+  grid.lty = "dashed",
+  ...
+)
 }
 \arguments{
 \item{p4d}{a \code{phylo4d} object.}

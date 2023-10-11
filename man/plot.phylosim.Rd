@@ -4,9 +4,15 @@
 \alias{plot.phylosim}
 \title{Plot \code{phylosim} object}
 \usage{
-\method{plot}{phylosim}(x, what = c("stat", "pval"),
-  stacked.methods = FALSE, quantiles = c(0.05, 0.95), col = 1:5,
-  legend = TRUE, ...)
+\method{plot}{phylosim}(
+  x,
+  what = c("stat", "pval"),
+  stacked.methods = FALSE,
+  quantiles = c(0.05, 0.95),
+  col = 1:5,
+  legend = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{phylosim} object.}

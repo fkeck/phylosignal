@@ -4,8 +4,15 @@
 \alias{phyloSim}
 \title{Simulate the behaviour of phylogenetic signal statistics with a given phylogeny}
 \usage{
-phyloSim(tree, methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
-  nsim = 99, reps = 999, W = NULL, model = "BM", pb = TRUE)
+phyloSim(
+  tree,
+  methods = c("all", "I", "Cmean", "Lambda", "K", "K.star"),
+  nsim = 99,
+  reps = 999,
+  W = NULL,
+  model = "BM",
+  pb = TRUE
+)
 }
 \arguments{
 \item{tree}{a \code{phylo}, \code{phylo4} or \code{phylo4d} object.}

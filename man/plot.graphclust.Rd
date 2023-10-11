@@ -4,8 +4,13 @@
 \alias{plot.graphclust}
 \title{Plot phylogenetically constrained  clustering}
 \usage{
-\method{plot}{graphclust}(x, which = c("selection", "graph", "tree"),
-  ask = TRUE, colored = TRUE, ...)
+\method{plot}{graphclust}(
+  x,
+  which = c("selection", "graph", "tree"),
+  ask = TRUE,
+  colored = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{graphclust} object as produced by \code{\link{graphClust}}.}
