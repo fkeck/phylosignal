@@ -4,3 +4,9 @@
 \name{phylosignal}
 \alias{phylosignal}
 \title{phylosignal}
+\description{
+A collection of tools to explore the phylogenetic signal in univariate and multivariate data.
+The package provides functions to plot traits data against a phylogenetic tree, different
+measures and tests for the phylogenetic signal, methods to describe where the signal is
+located and a phylogenetic clustering method.
+}
