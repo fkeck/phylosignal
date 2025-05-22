@@ -74,17 +74,20 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
     D <- distTips(phy, method = dist.phylo)
     D <- as.matrix(D)
     D <- D[tips, tips]
+    
+    if(dist.phylo == "Abouheif") {
+      D.max <- max(D[D != max(D)])
+    } else {
+      D.max <- max(D)
+    }
+    
   } else {
     if(is.matrix(dist.phylo)){
       D <- dist.phylo[tips, tips]
+      D.max <- max(D)
     } else {
       stop("dist.phylo is not valid")
     }
-  }
-  if(dist.phylo == "Abouheif"){
-    D.max <- max(D[D != max(D)] )
-  } else {
-    D.max <- max(D)
   }
   
   if(is.null(sigma)){
@@ -111,6 +114,11 @@ phyloCorrelogram <- function(p4d, trait = names(tdata(p4d)),
   }
   res[, 2:3][res[, 2:3] > 1] <- 1
   res[, 2:3][res[, 2:3] < -1] <- -1
+  
+  if(!all(complete.cases(res))) {
+    warning("NaN values generated. Corresponding distances have been removed from the results.")
+    res <- res[complete.cases(res), ]
+  }
   
   pcr <- list(res = res, trait = trait, dist.phylo = dist.phylo, sigma = sigma,
               ci.bs = ci.bs, ci.conf = ci.conf, n = n.tips)

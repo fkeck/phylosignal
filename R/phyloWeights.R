@@ -6,7 +6,7 @@
 #' @param tree a \code{phylo}, \code{phylo4} or \code{phylo4d} object.
 #' @param dist.phylo a character string specifying the method used to compute phylogenetic distances.
 #' Available distances are "\code{patristic}","\code{nNodes}","\code{Abouheif}" and "\code{sumDD}".
-#' See Details.
+#' See Details. Alternatively, a distance matrix.
 #' @param method a method to compute phylogenetic weights from phylogenetic distances.
 #' Available methods are "\code{lag-norm}", "\code{clade}", "\code{inverse}" and "\code{exponential}".
 #' See Details.
@@ -37,11 +37,16 @@ phyloWeights <- function(tree, dist.phylo = "patristic", method = "lag-norm",
   if (!inherits(tree, "phylo")){
     stop("x has to be a phylo, phylo4 or phylo4d object")
   }
-  dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
-  method <- match.arg(method, c("lag-norm", "clade", "inverse", "exponential"))
   
-  d <- distTips(tree, method = dist.phylo)
-  d <- as.matrix(d)
+  if(is.matrix(dist.phylo)) {
+    d <- dist.phylo
+  } else {
+    dist.phylo <- match.arg(dist.phylo, c("patristic", "nNodes", "Abouheif", "sumDD"))
+    d <- distTips(tree, method = dist.phylo)
+    d <- as.matrix(d)
+  }
+  
+  method <- match.arg(method, c("lag-norm", "clade", "inverse", "exponential"))
   
   if(method == "lag-norm"){
     w <- dnorm(d, mean = mu, sd = sigma)
