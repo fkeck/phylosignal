@@ -97,16 +97,35 @@ phyloSignalINT <- function(p4d, trait = names(tipData(p4d))[1], method = "Cmean"
   method <- match.arg(method, c("I", "Cmean", "Lambda", "K", "K.star"), several.ok = FALSE)
   
   int.nodes <- (nTips(p4d) + 1):(nTips(p4d) + nNodes(p4d))
+  
   new.data <- matrix(NA, nrow = nNodes(p4d), ncol = 2)
   colnames(new.data) <- c(paste("stat", method, trait, sep = "."), paste("pvalue", method, trait, sep = "."))
   rownames(new.data) <- int.nodes
   
+  # Method Lambda don't work on terminal sub-trees
+  if(method == "Lambda") {
+    int.nodes.sel <- sapply(int.nodes, function(x) {
+      d <- descendants(p4d, x, type = "children")
+      d <- d[d %in% int.nodes]
+      length(d) > 0L
+    },
+    simplify = TRUE)
+  } else {
+    int.nodes.sel <- rep(TRUE, length(int.nodes))
+  }
+  names(int.nodes.sel) <- int.nodes
+  
   for(i in int.nodes){
-    p4d.i <- phylobase::subset(p4d, node.subtree = i)
-    signal.i <- phyloSignal(p4d.i, methods = method, reps = reps, W = W)
-    new.data[as.character(i), 1] <- signal.i$stat[trait, method]
-    new.data[as.character(i), 2] <- signal.i$pvalue[trait, method]
-  }  
+    if(int.nodes.sel[as.character(i)]) {
+      p4d.i <- phylobase::subset(p4d, node.subtree = i)
+      signal.i <- phyloSignal(p4d.i, methods = method, reps = reps, W = W)
+      new.data[as.character(i), 1] <- signal.i$stat[trait, method]
+      new.data[as.character(i), 2] <- signal.i$pvalue[trait, method]
+    }
+    else {
+      new.data[as.character(i), ] <- NA
+    }
+  }
   nodeData(p4d) <- data.frame(nodeData(p4d), new.data)
   return(p4d)
 }
