@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // moranTest
 List moranTest(NumericVector xr, NumericMatrix Wr, unsigned int reps);
 RcppExport SEXP _phylosignal_moranTest(SEXP xrSEXP, SEXP WrSEXP, SEXP repsSEXP) {
